@@ -1,6 +1,11 @@
 package core
 
-case class Chord(notes: Set[Note], base: Note)
+case class Chord(notes: Set[Note], base: Note) {
+
+  def chordName: Either[List[ChordName], ChordName] =
+    ChordNaming.judge(notes, base)
+
+}
 
 object Chord {
   def fromVerticalNotes(vnotes: VerticalNotes): Option[Chord] = {
