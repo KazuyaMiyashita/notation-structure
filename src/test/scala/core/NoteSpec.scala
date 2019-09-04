@@ -22,4 +22,12 @@ class NoteSpec extends FlatSpec with Matchers {
 
   }
 
+  it should "add" in {
+    Note(1, 0) + Note(-1, 2) shouldEqual Note(0, 2)
+  }
+
+  it should "subtract" in {
+    Note(1, 0) - Note(-1, 2) shouldEqual Note(2, -2)
+  }
+
 }
