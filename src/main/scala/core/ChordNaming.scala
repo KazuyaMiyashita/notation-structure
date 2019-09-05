@@ -2,6 +2,8 @@ package core
 
 object ChordNaming {
 
+  val MaxCandicates = 3
+
   case class ChordPattern(chordType: ChordType, pattern: Set[FifthName])
   val chordPatterns = {
     import ChordType._
@@ -13,39 +15,36 @@ object ChordNaming {
     ChordPattern(MinorSeventh, Set(C, Eb, G, Bb)) :: Nil
   }
 
-  def calculate(pitchs: Set[Pitch]): Either[List[ChordName], ChordName] = {
-
-    val base = pitchs.minBy(_.toMidiNoteNumber.value)
+  def calculate(pitchs: Set[Pitch]): Either[List[Chord], Chord] = {
     
-    def calculateChordTypes: List[(FifthName, ChordType)] = {
+    def calculateChords: List[Chord] = {
       val fifths: Set[FifthName] = pitchs.map(_.fifth)
 
-      val candidates: Seq[(Int, FifthName, ChordType)] = for {
+      case class Candicate(priority: Int, root: FifthName, chordType: ChordType)
+      val candidates: Seq[Candicate] = for {
         root <- fifths.toList
         chordPattern <- chordPatterns
         shifted = chordPattern.pattern.map(_ + root)
         common = (shifted & fifths).size if common >= 0
         diff = (shifted &~ fifths).size
       } yield {
-        (common - diff, root, chordPattern.chordType)
+        Candicate(common - diff, root, chordPattern.chordType)
       }
 
-      val commonMaxNum = candidates.maxBy(_._1)._1
-      val commonMax = candidates.filter(_._1 == commonMaxNum)
-      commonMax.map(c => (c._2, c._3)).toList
+      val maxPriority = candidates.maxBy(_.priority).priority
+      val highPriorityCandidates = candidates.filter(_.priority == maxPriority)
+
+      if (highPriorityCandidates.length > MaxCandicates) Nil
+      else highPriorityCandidates.map(c => Chord(c.root, c.chordType)).toList
     }
 
-    val chordTypes = calculateChordTypes
+    val chords = calculateChords
 
     if (pitchs.size == 0) Left(Nil)
-    else chordTypes match {
+    else chords match {
       case Nil => Left(Nil)
-      case chordType :: Nil => Right {
-        ChordName(chordType._2, chordType._1, base.fifth, Set())
-      }
-      case _ => Left {
-        chordTypes.map { chordType => ChordName(chordType._2, chordType._1, base.fifth, Set()) }
-      }
+      case chord :: Nil => Right(chord)
+      case _ => Left(chords)
     }
 
   }
