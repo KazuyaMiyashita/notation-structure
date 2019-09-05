@@ -15,7 +15,7 @@ object ChordNaming {
     ChordPattern(MinorSeventh, Set(C, Eb, G, Bb)) :: Nil
   }
 
-  def calculate(pitchs: Set[Pitch]): Either[List[ChordName], ChordName] = {
+  def calculate(pitchs: Set[Pitch]): Either[List[Chord], Chord] = {
 
     val baseNote = pitchs.minBy(_.toMidiNoteNumber.value).fifth
     
@@ -45,10 +45,10 @@ object ChordNaming {
     else chordTypes match {
       case Nil => Left(Nil)
       case chordType :: Nil => Right {
-        ChordName(chordType._2, chordType._1, baseNote, Set())
+        Chord(chordType._2, chordType._1, baseNote, Set())
       }
       case _ => Left {
-        chordTypes.map { chordType => ChordName(chordType._2, chordType._1, baseNote, Set()) }
+        chordTypes.map { chordType => Chord(chordType._2, chordType._1, baseNote, Set()) }
       }
     }
 

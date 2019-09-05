@@ -1,6 +1,6 @@
 package core
 
-case class ChordName(
+case class Chord(
   chordType: ChordType,
   rootNote: FifthName,
   baseNote: FifthName,
