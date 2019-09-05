@@ -2,6 +2,8 @@ package core
 
 object ChordNaming {
 
+  val MaxCandicates = 3
+
   case class ChordPattern(chordType: ChordType, pattern: Set[FifthName])
   val chordPatterns = {
     import ChordType._
@@ -15,7 +17,7 @@ object ChordNaming {
 
   def calculate(pitchs: Set[Pitch]): Either[List[ChordName], ChordName] = {
 
-    val base = pitchs.minBy(_.toMidiNoteNumber.value)
+    val baseNote = pitchs.minBy(_.toMidiNoteNumber.value).fifth
     
     def calculateChordTypes: List[(FifthName, ChordType)] = {
       val fifths: Set[FifthName] = pitchs.map(_.fifth)
@@ -32,7 +34,9 @@ object ChordNaming {
 
       val commonMaxNum = candidates.maxBy(_._1)._1
       val commonMax = candidates.filter(_._1 == commonMaxNum)
-      commonMax.map(c => (c._2, c._3)).toList
+
+      if (commonMax.length > MaxCandicates) Nil
+      else commonMax.map(c => (c._2, c._3)).toList
     }
 
     val chordTypes = calculateChordTypes
@@ -41,10 +45,10 @@ object ChordNaming {
     else chordTypes match {
       case Nil => Left(Nil)
       case chordType :: Nil => Right {
-        ChordName(chordType._2, chordType._1, base.fifth, Set())
+        ChordName(chordType._2, chordType._1, baseNote, Set())
       }
       case _ => Left {
-        chordTypes.map { chordType => ChordName(chordType._2, chordType._1, base.fifth, Set()) }
+        chordTypes.map { chordType => ChordName(chordType._2, chordType._1, baseNote, Set()) }
       }
     }
 
