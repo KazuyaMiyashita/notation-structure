@@ -16,40 +16,35 @@ object ChordNaming {
   }
 
   def calculate(pitchs: Set[Pitch]): Either[List[Chord], Chord] = {
-
-    val baseNote = pitchs.minBy(_.toMidiNoteNumber.value).fifth
     
-    def calculateChordTypes: List[(FifthName, ChordType)] = {
+    def calculateChords: List[Chord] = {
       val fifths: Set[FifthName] = pitchs.map(_.fifth)
 
-      val candidates: Seq[(Int, FifthName, ChordType)] = for {
+      case class Candicate(priority: Int, root: FifthName, chordType: ChordType)
+      val candidates: Seq[Candicate] = for {
         root <- fifths.toList
         chordPattern <- chordPatterns
         shifted = chordPattern.pattern.map(_ + root)
         common = (shifted & fifths).size if common >= 0
         diff = (shifted &~ fifths).size
       } yield {
-        (common - diff, root, chordPattern.chordType)
+        Candicate(common - diff, root, chordPattern.chordType)
       }
 
-      val commonMaxNum = candidates.maxBy(_._1)._1
-      val commonMax = candidates.filter(_._1 == commonMaxNum)
+      val maxPriority = candidates.maxBy(_.priority).priority
+      val highPriorityCandidates = candidates.filter(_.priority == maxPriority)
 
-      if (commonMax.length > MaxCandicates) Nil
-      else commonMax.map(c => (c._2, c._3)).toList
+      if (highPriorityCandidates.length > MaxCandicates) Nil
+      else highPriorityCandidates.map(c => Chord(c.root, c.chordType)).toList
     }
 
-    val chordTypes = calculateChordTypes
+    val chords = calculateChords
 
     if (pitchs.size == 0) Left(Nil)
-    else chordTypes match {
+    else chords match {
       case Nil => Left(Nil)
-      case chordType :: Nil => Right {
-        Chord(chordType._2, chordType._1, baseNote, Set())
-      }
-      case _ => Left {
-        chordTypes.map { chordType => Chord(chordType._2, chordType._1, baseNote, Set()) }
-      }
+      case chord :: Nil => Right(chord)
+      case _ => Left(chords)
     }
 
   }
