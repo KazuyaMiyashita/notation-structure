@@ -6,11 +6,25 @@ import scala.util.{Try, Success, Failure}
 object Main extends App {
   println("hello midi")
   
-  MidiSystem.getMidiDeviceInfo().foreach(println)
-  
   val infos = MidiSystem.getMidiDeviceInfo().toList
   val devices: Try[List[MidiDevice]] = Try {
     infos.map { info => MidiSystem.getMidiDevice(info) }
+  }
+
+  def dumpDeviceInfo(device: MidiDevice): Unit = {
+    val info: MidiDevice.Info = device.getDeviceInfo();
+    println("devinfo: " + info.toString())
+    println("  name:"        + info.getName())
+    println("  vendor:"      + info.getVendor())
+    println("  version:"     + info.getVersion())
+    println("  description:" + info.getDescription())
+    if (device.isInstanceOf[Synthesizer]) {
+      println("  SYNTHESIZER")
+    }
+    if (device.isInstanceOf[Sequencer]) {
+      println("  SEQUENCER")
+    }
+    println("");
   }
 
   devices match {
@@ -19,7 +33,7 @@ object Main extends App {
     case Failure(e) => println(e)
     case Success(devices) => {
       if (devices.length == 0) println("no devices")
-      else devices.foreach(println)
+      else devices.foreach(dumpDeviceInfo)
     }
   }
 
