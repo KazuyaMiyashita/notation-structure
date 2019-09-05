@@ -14,8 +14,8 @@ class ChordNamingSpec extends WordSpec with Matchers {
       
       val result = Right(ChordName(
         chordType = Major,
-        rootNote = NoteName(0),
-        baseNote = NoteName(0),
+        rootNote = FifthName.C,
+        baseNote = FifthName.C,
         tensions = Set()
       ))
 
@@ -30,8 +30,8 @@ class ChordNamingSpec extends WordSpec with Matchers {
       
       val result = Right(ChordName(
         chordType = Minor,
-        rootNote = NoteName(0),
-        baseNote = NoteName(0),
+        rootNote = FifthName.C,
+        baseNote = FifthName.C,
         tensions = Set()
       ))
 
@@ -46,8 +46,8 @@ class ChordNamingSpec extends WordSpec with Matchers {
       
       val result = Right(ChordName(
         chordType = MajorSeventh,
-        rootNote = NoteName(0),
-        baseNote = NoteName(0),
+        rootNote = FifthName.C,
+        baseNote = FifthName.C,
         tensions = Set()
       ))
 
@@ -62,8 +62,8 @@ class ChordNamingSpec extends WordSpec with Matchers {
       
       val result = Right(ChordName(
         chordType = MinorSeventh,
-        rootNote = NoteName(0),
-        baseNote = NoteName(0),
+        rootNote = FifthName.C,
+        baseNote = FifthName.C,
         tensions = Set()
       ))
 
@@ -82,8 +82,8 @@ class ChordNamingSpec extends WordSpec with Matchers {
       
       val result = Right(ChordName(
         chordType = Major,
-        rootNote = NoteName(2),
-        baseNote = NoteName(2),
+        rootNote = FifthName.D,
+        baseNote = FifthName.D,
         tensions = Set()
       ))
 
@@ -98,8 +98,8 @@ class ChordNamingSpec extends WordSpec with Matchers {
       
       val result = Right(ChordName(
         chordType = Minor,
-        rootNote = NoteName(2),
-        baseNote = NoteName(2),
+        rootNote = FifthName.D,
+        baseNote = FifthName.D,
         tensions = Set()
       ))
 
@@ -114,8 +114,8 @@ class ChordNamingSpec extends WordSpec with Matchers {
       
       val result = Right(ChordName(
         chordType = MajorSeventh,
-        rootNote = NoteName(2),
-        baseNote = NoteName(2),
+        rootNote = FifthName.D,
+        baseNote = FifthName.D,
         tensions = Set()
       ))
 
@@ -130,8 +130,8 @@ class ChordNamingSpec extends WordSpec with Matchers {
       
       val result = Right(ChordName(
         chordType = MinorSeventh,
-        rootNote = NoteName(2),
-        baseNote = NoteName(2),
+        rootNote = FifthName.D,
+        baseNote = FifthName.D,
         tensions = Set()
       ))
 

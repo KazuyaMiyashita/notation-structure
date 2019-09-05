@@ -2,8 +2,8 @@ package core
 
 case class ChordName(
   chordType: ChordType,
-  rootNote: NoteName,
-  baseNote: NoteName,
+  rootNote: FifthName,
+  baseNote: FifthName,
   tensions: Set[Tensions]
 ) {
   def name: String = {
