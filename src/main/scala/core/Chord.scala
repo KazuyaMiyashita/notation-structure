@@ -8,7 +8,7 @@ case class Chord(notes: Set[Note], base: Note) {
 }
 
 object Chord {
-  def fromVerticalNotes(vnotes: VerticalNotes): Option[Chord] = {
+  def fromVerticalNotes(vnotes: VNotes): Option[Chord] = {
     if (vnotes.size == 0) None
     else if (vnotes.size == 1) Some(Chord(vnotes.notes, vnotes.head))
     else {

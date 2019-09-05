@@ -2,11 +2,11 @@ package core
 
 import org.scalatest._
 
-class NoteSequenceSpec extends FlatSpec with Matchers {
+class HNotesSpec extends FlatSpec with Matchers {
 
   it should "convert scale to midi note number" in {
 
-    val scale = NoteSequence.from(
+    val scale = HNotes.from(
       Note(0, 0),
       Note(-1, 2),
       Note(-2, 4),
@@ -34,7 +34,7 @@ class NoteSequenceSpec extends FlatSpec with Matchers {
 
   it should "transpose" in {
 
-    val cMajorScale = NoteSequence.from(
+    val cMajorScale = HNotes.from(
       Note(0, 0),
       Note(-1, 2),
       Note(-2, 4),
@@ -45,7 +45,7 @@ class NoteSequenceSpec extends FlatSpec with Matchers {
       Note(1, 0)
     )
 
-    val dMajorScale = NoteSequence.from(
+    val dMajorScale = HNotes.from(
       Note(-1,2),
       Note(-2,4),
       Note(-3,6),
