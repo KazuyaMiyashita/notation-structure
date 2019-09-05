@@ -1,12 +1,8 @@
 package core
 
-case class Note(octave: Int, fifth: Int) {
+case class Note(pitch: Pitch, duration: Duration) {
 
-  def +(that: Note) = Note(this.octave + that.octave, this.fifth + that.fifth)
-  def -(that: Note) = Note(this.octave - that.octave, this.fifth - that.fifth)
-
-  def toMidiNoteNumber: MidiNoteNumber = {
-    MidiNoteNumber(60 + (octave * 12) + (fifth * 7))
-  }
+  def +(that: Note) = Note(this.pitch + that.pitch, this.duration + that.duration)
+  def -(that: Note) = Note(this.pitch - that.pitch, this.duration - that.duration)
 
 }

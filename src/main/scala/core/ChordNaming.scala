@@ -2,7 +2,7 @@ package core
 
 object ChordNaming {
 
-  def calculate(notes: Set[Note]): Either[List[ChordName], ChordName] = {
+  def calculate(notes: Set[Pitch]): Either[List[ChordName], ChordName] = {
 
     val base = notes.minBy(_.toMidiNoteNumber.value)
     

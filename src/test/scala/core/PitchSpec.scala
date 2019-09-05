@@ -6,16 +6,16 @@ class NoteSpec extends FlatSpec with Matchers {
 
   it should "convert note to midi note number" in {
 
-    Note(0, 0).toMidiNoteNumber shouldEqual MidiNoteNumber(60)
-    Note(1, 0).toMidiNoteNumber shouldEqual MidiNoteNumber(72)
-    Note(0, 1).toMidiNoteNumber shouldEqual MidiNoteNumber(67)
+    Pitch(0, 0).toMidiNoteNumber shouldEqual MidiNoteNumber(60)
+    Pitch(1, 0).toMidiNoteNumber shouldEqual MidiNoteNumber(72)
+    Pitch(0, 1).toMidiNoteNumber shouldEqual MidiNoteNumber(67)
 
   }
 
   it should "distinguish enharmonic" in {
 
-    val cSharp = Note(-4, 7)
-    val dFlat = Note(3, -5)
+    val cSharp = Pitch(-4, 7)
+    val dFlat = Pitch(3, -5)
 
     cSharp.toMidiNoteNumber shouldEqual dFlat.toMidiNoteNumber
     (cSharp == dFlat) shouldEqual false
@@ -23,11 +23,11 @@ class NoteSpec extends FlatSpec with Matchers {
   }
 
   it should "add" in {
-    Note(1, 0) + Note(-1, 2) shouldEqual Note(0, 2)
+    Pitch(1, 0) + Pitch(-1, 2) shouldEqual Pitch(0, 2)
   }
 
   it should "subtract" in {
-    Note(1, 0) - Note(-1, 2) shouldEqual Note(2, -2)
+    Pitch(1, 0) - Pitch(-1, 2) shouldEqual Pitch(2, -2)
   }
 
 }
