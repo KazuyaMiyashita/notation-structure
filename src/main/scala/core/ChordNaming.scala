@@ -2,7 +2,9 @@ package core
 
 object ChordNaming {
 
-  def judge(notes: Set[Note], base: Note): Either[List[ChordName], ChordName] = {
+  def calculate(notes: Set[Note]): Either[List[ChordName], ChordName] = {
+
+    val base = notes.minBy(_.toMidiNoteNumber.value)
     
     type RootFifth = Int
     def calculateChordTypes: List[(RootFifth, ChordType)] = {
@@ -25,7 +27,8 @@ object ChordNaming {
 
     val chordTypes = calculateChordTypes
 
-    chordTypes match {
+    if (notes.size == 0) Left(Nil)
+    else chordTypes match {
       case Nil => Left(Nil)
       case chordType :: Nil => Right {
         ChordName(chordType._2, NoteName(chordType._1), NoteName(base.fifth), Set())

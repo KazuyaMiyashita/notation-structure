@@ -7,9 +7,10 @@ case class VNotes(notes: Set[Note]) extends Set[Note] {
   def contains(elem: Note): Boolean = notes.contains(elem)
 
   def transpose(that: Note) = VNotes(map(_ + that))
+  def calculateChordName: Either[List[ChordName], ChordName] = ChordNaming.calculate(notes)
 }
 
-object VerticalNotes {
+object VNotes {
 
   def from(ns: Note*): VNotes = new VNotes(ns.toSet)
 
