@@ -1,20 +1,21 @@
 package core
 
 import org.scalatest._
+import PitchName._
 
 class HNotesSpec extends FlatSpec with Matchers {
 
   it should "convert scale to midi note number" in {
 
     val scale = HNotes.from(
-      Note(Pitch(0, 0), Duration(0)),
-      Note(Pitch(-1, 2), Duration(0)),
-      Note(Pitch(-2, 4), Duration(0)),
-      Note(Pitch(1, -1), Duration(0)),
-      Note(Pitch(0, 1), Duration(0)),
-      Note(Pitch(-1, 3), Duration(0)),
-      Note(Pitch(-2, 5), Duration(0)),
-      Note(Pitch(1, 0), Duration(0))
+      Note(C4, Duration(0)),
+      Note(D4, Duration(0)),
+      Note(E4, Duration(0)),
+      Note(F4, Duration(0)),
+      Note(G4, Duration(0)),
+      Note(A4, Duration(0)),
+      Note(B4, Duration(0)),
+      Note(C5, Duration(0))
     )
 
     val midiNotes: Seq[MidiNoteNumber] = Seq(
@@ -35,28 +36,28 @@ class HNotesSpec extends FlatSpec with Matchers {
   it should "transpose" in {
 
     val cMajorScale = HNotes.from(
-      Note(Pitch(0, 0), Duration(0)),
-      Note(Pitch(-1, 2), Duration(0)),
-      Note(Pitch(-2, 4), Duration(0)),
-      Note(Pitch(1, -1), Duration(0)),
-      Note(Pitch(0, 1), Duration(0)),
-      Note(Pitch(-1, 3), Duration(0)),
-      Note(Pitch(-2, 5), Duration(0)),
-      Note(Pitch(1, 0), Duration(0))
+      Note(C4, Duration(0)),
+      Note(D4, Duration(0)),
+      Note(E4, Duration(0)),
+      Note(F4, Duration(0)),
+      Note(G4, Duration(0)),
+      Note(A4, Duration(0)),
+      Note(B4, Duration(0)),
+      Note(C5, Duration(0))
     )
 
     val dMajorScale = HNotes.from(
-      Note(Pitch(-1, 2), Duration(0)),
-      Note(Pitch(-2, 4), Duration(0)),
-      Note(Pitch(-3, 6), Duration(0)),
-      Note(Pitch(0, 1), Duration(0)),
-      Note(Pitch(-1, 3), Duration(0)),
-      Note(Pitch(-2, 5), Duration(0)),
-      Note(Pitch(-3, 7), Duration(0)),
-      Note(Pitch(0, 2), Duration(0))
+      Note(D4, Duration(0)),
+      Note(E4, Duration(0)),
+      Note(Fs4, Duration(0)),
+      Note(G4, Duration(0)),
+      Note(A4, Duration(0)),
+      Note(B4, Duration(0)),
+      Note(Cs5, Duration(0)),
+      Note(D5, Duration(0))
     )
 
-    val cToD: Note = Note(Pitch(-1, 2) - Pitch(0, 0), Duration(0))
+    val cToD: Note = Note(D4 - C4, Duration(0))
 
     cMajorScale.transpose(cToD) shouldEqual dMajorScale
 

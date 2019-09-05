@@ -2,7 +2,7 @@ package core
 
 import org.scalatest._
 
-class NoteSpec extends FlatSpec with Matchers {
+class PitchSpec extends FlatSpec with Matchers {
 
   it should "convert note to midi note number" in {
 
