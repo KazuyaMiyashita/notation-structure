@@ -4,7 +4,7 @@ case class Chord(
   root: FifthName,
   chordType: ChordType,
   bass: FifthName,
-  tensions: Set[Tensions]
+  tensions: Set[Tension]
 ) {
 
   def name: String = {
@@ -12,8 +12,8 @@ case class Chord(
     s"${root.name} ${chordType.name} ${tensionsName} / ${bass.name}"
   }
 
-  def bass(b: FifthName): Chord = this.copy(bass = b)
-  def tensions(ts: Tensions*): Chord = this.copy(tensions = ts.toSet)
+  def withBass(b: FifthName): Chord = this.copy(bass = b)
+  def withTensions(ts: Tension*): Chord = this.copy(tensions = ts.toSet)
 }
 
 object Chord {
