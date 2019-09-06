@@ -11,7 +11,7 @@ object ChordNaming {
 
     ChordPattern(Major, Set(C, E, G)) ::
     ChordPattern(Minor, Set(C, Eb, G)) ::
-    ChordPattern(MajorSeventh, Set(C, E, G, Bb)) ::
+    ChordPattern(Seventh, Set(C, E, G, Bb)) ::
     ChordPattern(MinorSeventh, Set(C, Eb, G, Bb)) :: Nil
   }
 

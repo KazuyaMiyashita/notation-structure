@@ -28,11 +28,11 @@ class ChordNamingSpec extends WordSpec with Matchers {
       chordName shouldEqual result
     }
 
-    "name (C, E, G, Bb) to C MajorSeventh" in {
+    "name (C, E, G, Bb) to C Seventh" in {
       val notes = Set(C4, E4, G4, Bb4)
       val chordName = ChordNaming.calculate(notes)
       
-      val result = Right(Chord(C, MajorSeventh))
+      val result = Right(Chord(C, Seventh))
 
       chordName shouldEqual result
     }
@@ -68,11 +68,11 @@ class ChordNamingSpec extends WordSpec with Matchers {
       chordName shouldEqual result
     }
 
-    "name (D, F#, A, C) to D MajorSeventh" in {
+    "name (D, F#, A, C) to D Seventh" in {
       val notes = Set(D4, Fs4, A4, C5)
       val chordName = ChordNaming.calculate(notes)
       
-      val result = Right(Chord(D, MajorSeventh))
+      val result = Right(Chord(D, Seventh))
 
       chordName shouldEqual result
     }
@@ -108,11 +108,11 @@ class ChordNamingSpec extends WordSpec with Matchers {
       chordName shouldEqual result
     }
 
-    "name (C, D, E, G, Bb) to C MajorSeventh AddNinth" in {
+    "name (C, D, E, G, Bb) to C Seventh AddNinth" in {
       val notes = Set(C4, D4, E4, G4, Bb4)
       val chordName = ChordNaming.calculate(notes)
       
-      val result = Right(Chord(C, MajorSeventh).withTensions(AddNinth))
+      val result = Right(Chord(C, Seventh).withTensions(AddNinth))
 
       chordName shouldEqual result
     }
@@ -148,11 +148,11 @@ class ChordNamingSpec extends WordSpec with Matchers {
       chordName shouldEqual result
     }
 
-    "name (D, E, F#, A, C) to D MajorSeventh AddNinth" in {
+    "name (D, E, F#, A, C) to D Seventh AddNinth" in {
       val notes = Set(D4, E4, Fs4, A4, C5)
       val chordName = ChordNaming.calculate(notes)
       
-      val result = Right(Chord(D, MajorSeventh).withTensions(AddNinth))
+      val result = Right(Chord(D, Seventh).withTensions(AddNinth))
 
       chordName shouldEqual result
     }
