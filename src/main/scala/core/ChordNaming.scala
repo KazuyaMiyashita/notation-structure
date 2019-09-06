@@ -46,9 +46,16 @@ object ChordNaming {
     else chord
   }
 
+  def addBass(chord: Chord, pitchs: Set[Pitch]): Chord = {
+    val bass = pitchs.minBy(_.toMidiNoteNumber.value)
+    chord.withBass(bass.fifth)
+  }
+
   def calculate(pitchs: Set[Pitch]): Either[List[Chord], Chord] = {
 
-    val chords = calculateChords(pitchs).map(c => addTensions(c, pitchs))
+    val chords = calculateChords(pitchs)
+      .map(c => addTensions(c, pitchs))
+      .map(c => addBass(c, pitchs))
 
     if (pitchs.size == 0) Left(Nil)
     else chords match {
