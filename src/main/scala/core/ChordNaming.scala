@@ -16,6 +16,16 @@ object ChordNaming {
     ChordPattern(MajorSeventh, Set(C, E, G, B)) :: Nil
   }
 
+  case class TensionPattern(tension: Tension, pattern: FifthName)
+  val tensionPatterns = {
+    import Tension._
+    import FifthName._
+
+    TensionPattern(Ninth, D) ::
+    TensionPattern(FlatNinth, Db) ::
+    TensionPattern(SharpNinth, Ds) :: Nil
+  }
+
   def calculateChords(pitchs: Set[Pitch]): List[Chord] = {
     val fifths: Set[FifthName] = pitchs.map(_.fifth)
 
@@ -41,10 +51,13 @@ object ChordNaming {
     val pattern: Set[FifthName] = 
       chordPatterns.find(_.chordType == chord.chordType).get.pattern.map(_ + chord.bass)
     val diff = pitchs.map(_.fifth) &~ pattern
-    val shifted = chord.root + FifthName.D
 
-    if (diff(shifted)) chord.withTensions(Tension.Ninth)
-    else chord
+    val tensions: Seq[Tension] = for {
+      tensionPattern <- tensionPatterns
+      shifted = chord.root + tensionPattern.pattern if diff(shifted)
+    } yield tensionPattern.tension
+
+    tensions.foldLeft(chord)((c, t) => c.withTensions(t))
   }
 
   def addBass(chord: Chord, pitchs: Set[Pitch]): Chord = {
