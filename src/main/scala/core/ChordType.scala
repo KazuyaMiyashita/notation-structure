@@ -11,8 +11,8 @@ object ChordType {
   object Minor extends ChordType {
     override val name = "Minor"
   }
-  object MajorSeventh extends ChordType {
-    override val name = "MajorSeventh"
+  object Seventh extends ChordType {
+    override val name = "Seventh"
   }
   object MinorSeventh extends ChordType {
     override val name = "MinorSeventh"
