@@ -189,7 +189,7 @@ class ChordNamingSpec extends WordSpec with Matchers {
     }
 
     "name (C, Eb, G) / Eb to C Minor / Eb" in {
-      val notes = Set(C4, Eb4, G4)
+      val notes = Set(C4, Eb4, G4, Eb3)
       val chordName = ChordNaming.calculate(notes)
       
       val result = Right(Chord(C, Minor).withBass(Eb))
@@ -198,7 +198,7 @@ class ChordNamingSpec extends WordSpec with Matchers {
     }
 
     "name (C, Eb, G) / G to C Minor / G" in {
-      val notes = Set(C4, Eb4, G4)
+      val notes = Set(C4, Eb4, G4, G3)
       val chordName = ChordNaming.calculate(notes)
       
       val result = Right(Chord(C, Minor).withBass(G))
