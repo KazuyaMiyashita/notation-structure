@@ -5,7 +5,7 @@ sealed trait Tension {
 }
 
 object Tension {
-  object AddNinth extends Tension {
-    override def name = "add9"
+  object Ninth extends Tension {
+    override def name = "9"
   }
 }

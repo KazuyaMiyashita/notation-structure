@@ -43,7 +43,7 @@ object ChordNaming {
     val diff = pitchs.map(_.fifth) &~ pattern
     val shifted = chord.root + FifthName.D
 
-    if (diff(shifted)) chord.withTensions(Tension.AddNinth)
+    if (diff(shifted)) chord.withTensions(Tension.Ninth)
     else chord
   }
 
