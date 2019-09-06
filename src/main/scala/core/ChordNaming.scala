@@ -52,17 +52,17 @@ object ChordNaming {
     chord.withBass(bass.fifth)
   }
 
-  def calculate(pitchs: Set[Pitch]): Either[List[Chord], Chord] = {
+  def calculate(pitchs: Set[Pitch]): Either[Set[Chord], Chord] = {
 
     val chords = calculateChords(pitchs)
       .map(c => addTensions(c, pitchs))
       .map(c => addBass(c, pitchs))
 
-    if (pitchs.size == 0) Left(Nil)
+    if (pitchs.size == 0) Left(Set())
     else chords match {
-      case Nil => Left(Nil)
+      case Nil => Left(Set())
       case chord :: Nil => Right(chord)
-      case _ => Left(chords)
+      case _ => Left(chords.toSet)
     }
 
   }
