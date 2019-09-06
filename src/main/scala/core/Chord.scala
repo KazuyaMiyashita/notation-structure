@@ -8,7 +8,9 @@ case class Chord(
 ) {
 
   def name: String = {
-    val tensionsName = tensions.map(_.name).mkString("")
+    val tensionsName =
+      if (tensions.isEmpty) ""
+      else "(" + tensions.map(_.name).mkString(",") + ")"
     val bassName = if (root == bass) "" else s"/${bass.name}"
     s"${root.name}${chordType.name}${tensionsName}${bassName}"
   }
