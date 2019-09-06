@@ -12,7 +12,8 @@ object ChordNaming {
     ChordPattern(Major, Set(C, E, G)) ::
     ChordPattern(Minor, Set(C, Eb, G)) ::
     ChordPattern(Seventh, Set(C, E, G, Bb)) ::
-    ChordPattern(MinorSeventh, Set(C, Eb, G, Bb)) :: Nil
+    ChordPattern(MinorSeventh, Set(C, Eb, G, Bb)) ::
+    ChordPattern(MajorSeventh, Set(C, E, G, B)) :: Nil
   }
 
   def calculateChords(pitchs: Set[Pitch]): List[Chord] = {

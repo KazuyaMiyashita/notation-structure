@@ -28,6 +28,10 @@ class ChordNamingSpec extends WordSpec with Matchers {
       nameof(C4, Eb4, G4, Bb4) shouldEqual Right(Chord(C, MinorSeventh))
     }
 
+    "(C4, E4, G4, B4) to CM7" in {
+      nameof(C4, E4, G4, B4) shouldEqual Right(Chord(C, MajorSeventh))
+    }
+
   }
 
   "root D" should {
@@ -40,12 +44,16 @@ class ChordNamingSpec extends WordSpec with Matchers {
       nameof(D4, F4, A4) shouldEqual Right(Chord(D, Minor))
     }
 
-    "(D4, Fs4, A4, C5) to D Seventh" in {
+    "(D4, Fs4, A4, C5) to D7" in {
       nameof(D4, Fs4, A4, C5) shouldEqual Right(Chord(D, Seventh))
     }
 
-    "(D4, F4, A4, C5) to D MinorSeventh" in {
+    "(D4, F4, A4, C5) to Dm7" in {
       nameof(D4, F4, A4, C5) shouldEqual Right(Chord(D, MinorSeventh))
+    }
+
+    "(D4, Fs4, A4, Cs5) to DM7" in {
+      nameof(D4, Fs4, A4, Cs5) shouldEqual Right(Chord(D, MajorSeventh))
     }
 
   }
@@ -68,6 +76,10 @@ class ChordNamingSpec extends WordSpec with Matchers {
       nameof(C4, D4, Eb4, G4, Bb4) shouldEqual Right(Chord(C, MinorSeventh).withTensions(AddNinth))
     }
 
+    "(C4, D4, E4, G4, B4) to CM7 add9" in {
+      nameof(C4, D4, E4, G4, B4) shouldEqual Right(Chord(C, MajorSeventh).withTensions(AddNinth))
+    }
+
   }
 
   "root D add9" should {
@@ -86,6 +98,10 @@ class ChordNamingSpec extends WordSpec with Matchers {
 
     "(D4, E4, F4, A4, C5) to Dm7 add9" in {
       nameof(D4, E4, F4, A4, C5) shouldEqual Right(Chord(D, MinorSeventh).withTensions(AddNinth))
+    }
+
+    "(D4, E4, Fs4, A4, Cs5) to DM7 add9" in {
+      nameof(D4, E4, Fs4, A4, Cs5) shouldEqual Right(Chord(D, MajorSeventh).withTensions(AddNinth))
     }
 
   }
@@ -132,6 +148,18 @@ class ChordNamingSpec extends WordSpec with Matchers {
       nameof(C4, Eb4, G4, Bb4, Bb3) shouldEqual Right(Chord(C, MinorSeventh).withBass(Bb))
     }
 
+    "(C4, E4, G4, B4, E3) to CM7 / E" in {
+      nameof(C4, E4, G4, B4, E3) shouldEqual Right(Chord(C, MajorSeventh).withBass(E))
+    }
+
+    "(C4, E4, G4, B4, E3) to CM7 / G" in {
+      nameof(C4, E4, G4, B4, G3) shouldEqual Right(Chord(C, MajorSeventh).withBass(G))
+    }
+
+    "(C4, E4, G4, B4, E3) to CM7 / B" in {
+      nameof(C4, E4, G4, B4, B3) shouldEqual Right(Chord(C, MajorSeventh).withBass(B))
+    }
+
   }
 
   "root D with bass" should {
@@ -174,6 +202,18 @@ class ChordNamingSpec extends WordSpec with Matchers {
 
     "(D4, F4, A4, C5, C4) to Dm7 / C" in {
       nameof(D4, F4, A4, C5, C4) shouldEqual Right(Chord(D, MinorSeventh).withBass(C))
+    }
+
+    "(D4, Fs4, A4, CM5, Fs3) to DM7 / F#" in {
+      nameof(D4, Fs4, A4, Cs5, Fs3) shouldEqual Right(Chord(D, MajorSeventh).withBass(Fs))
+    }
+
+    "(D4, Fs4, A4, CM5, A3) to DM7 / A" in {
+      nameof(D4, Fs4, A4, Cs5, A3) shouldEqual Right(Chord(D, MajorSeventh).withBass(A))
+    }
+
+    "(D4, Fs4, A4, CM5, Cs4) to DM7 / C#" in {
+      nameof(D4, Fs4, A4, Cs5, Cs4) shouldEqual Right(Chord(D, MajorSeventh).withBass(Cs))
     }
 
   }

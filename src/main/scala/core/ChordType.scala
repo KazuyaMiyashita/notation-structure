@@ -6,15 +6,18 @@ sealed trait ChordType {
 
 object ChordType {
   object Major extends ChordType {
-    override val name = "Major"
+    override val name = ""
   }
   object Minor extends ChordType {
-    override val name = "Minor"
+    override val name = "m"
   }
   object Seventh extends ChordType {
-    override val name = "Seventh"
+    override val name = "7"
   }
   object MinorSeventh extends ChordType {
-    override val name = "MinorSeventh"
+    override val name = "m7"
+  }
+  object MajorSeventh extends ChordType {
+    override val name = "M7"
   }
 }
