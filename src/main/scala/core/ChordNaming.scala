@@ -38,8 +38,9 @@ object ChordNaming {
       root <- fifths.toList
       chordPattern <- chordPatterns
       shifted = chordPattern.pattern.map(_ + root)
-      common = (shifted & fifths).size if common >= 0
+      common = (shifted & fifths).size if common >= 1
       diff = (shifted &~ fifths).size
+      priority = common - diff if priority >= 1
     } yield {
       Candicate(common - diff, root, chordPattern.chordType)
     }
