@@ -45,13 +45,6 @@ object ChordNaming {
       Candicate(common - diff, root, chordPattern.chordType)
     }
 
-    println(pitchs.map(p => p.fifth.name).mkString(" "))
-    candidates.sortWith((c1, c2) => c1.priority >= c2.priority).foreach { c =>
-      val chord = Chord(c.root, c.chordType)
-      println(s"${c.priority} : ${chord}")
-    }
-    println()
-
     val maxPriority = candidates.maxBy(_.priority).priority
     val highPriorityCandidates = candidates.filter(_.priority == maxPriority)
 
