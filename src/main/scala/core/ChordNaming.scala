@@ -38,11 +38,19 @@ object ChordNaming {
       root <- fifths.toList
       chordPattern <- chordPatterns
       shifted = chordPattern.pattern.map(_ + root)
-      common = (shifted & fifths).size if common >= 0
+      common = (shifted & fifths).size if common >= 1
       diff = (shifted &~ fifths).size
+      priority = common - diff if priority >= 1
     } yield {
       Candicate(common - diff, root, chordPattern.chordType)
     }
+
+    println(pitchs.map(p => p.fifth.name).mkString(" "))
+    candidates.sortWith((c1, c2) => c1.priority >= c2.priority).foreach { c =>
+      val chord = Chord(c.root, c.chordType)
+      println(s"${c.priority} : ${chord}")
+    }
+    println()
 
     val maxPriority = candidates.maxBy(_.priority).priority
     val highPriorityCandidates = candidates.filter(_.priority == maxPriority)
