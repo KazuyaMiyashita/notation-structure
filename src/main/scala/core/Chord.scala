@@ -18,7 +18,7 @@ case class Chord(
   override def toString = name
 
   def withBass(b: FifthName): Chord = this.copy(bass = b)
-  def withTensions(ts: Tension*): Chord = this.copy(tensions = ts.toSet)
+  def withTensions(ts: Tension*): Chord = this.copy(tensions = tensions ++ ts.toSet)
 }
 
 object Chord {
