@@ -4,16 +4,25 @@ object ChordNaming {
 
   val MaxCandicates = 3
 
-  case class ChordPattern(chordType: ChordType, pattern: Set[FifthName])
+  case class ChordPattern(
+    chordType: ChordType,
+    chordTonesOnC: Set[FifthName],
+    avoidNotesOnC: Set[FifthName],
+    tensionNotesOnC: Set[FifthName]
+  ) {
+    def chordTones(root: FifthName): Set[FifthName] = chordTonesOnC.map(_ + root)
+    def avoidNotes(root: FifthName): Set[FifthName] = avoidNotesOnC.map(_ + root)
+    def tensionNotes(root: FifthName): Set[FifthName] = tensionNotesOnC.map(_ + root)
+  }
   val chordPatterns = {
     import ChordType._
     import FifthName._
 
-    ChordPattern(Major, Set(C, E, G)) ::
-    ChordPattern(Minor, Set(C, Eb, G)) ::
-    ChordPattern(Seventh, Set(C, E, G, Bb)) ::
-    ChordPattern(MinorSeventh, Set(C, Eb, G, Bb)) ::
-    ChordPattern(MajorSeventh, Set(C, E, G, B)) :: Nil
+    ChordPattern(Major, Set(C, E, G), Set(F, Bb), Set(D, Fs, A)) ::
+    ChordPattern(Minor, Set(C, Eb, G), Set(Db, Bb), Set(D, G)) ::
+    ChordPattern(Seventh, Set(C, E, G, Bb), Set(F), Set(Db, D, Ds, Fs, Ab, A)) ::
+    ChordPattern(MinorSeventh, Set(C, Eb, G, Bb), Set(), Set(D, Db, F, Ab, A)) ::
+    ChordPattern(MajorSeventh, Set(C, E, G, B), Set(F), Set(D, Fs, A)) :: Nil
   }
 
   case class TensionPattern(tension: Tension, pattern: FifthName)
@@ -30,57 +39,51 @@ object ChordNaming {
     TensionPattern(FlatThirteenth, Ab) :: Nil
   }
 
-  def calculateChords(pitchs: Set[Pitch]): List[Chord] = {
+  case class Candidate(priority: Int, chord: Chord, tensions: Set[Tension])
+  def calculateCandidates(pitchs: Set[Pitch]): List[Candidate] = {
     val fifths: Set[FifthName] = pitchs.map(_.fifth)
 
-    case class Candicate(priority: Int, root: FifthName, chordType: ChordType)
-    val candidates: Seq[Candicate] = for {
+    for {
       root <- fifths.toList
       chordPattern <- chordPatterns
-      shifted = chordPattern.pattern.map(_ + root)
-      common = (shifted & fifths).size if common >= 1
-      diff = (shifted &~ fifths).size
-      priority = common - diff if priority >= 1
+      chordTones = chordPattern.chordTones(root)
+      avoidNotes = chordPattern.avoidNotes(root)
+      tensionNotes = chordPattern.tensionNotes(root)
+      commonSize = (chordTones & fifths).size if commonSize >= 1
+      tensionSize = (tensionNotes & fifths).size
+      avoidSize = (avoidNotes & fifths).size
+      diffSize = (chordTones &~ fifths).size
+      priority = commonSize - avoidSize - diffSize if priority >= 1
     } yield {
-      Candicate(common - diff, root, chordPattern.chordType)
+      val bass = pitchs.minBy(_.toMidiNoteNumber.value).fifth
+      val genten1: Boolean = Set(FifthName.F, FifthName.A, FifthName.Ab).contains(bass - root)
+      val genten1num: Int = if (genten1) 1 else 0
+      val genten2: Boolean = root != bass
+      val genten2num: Int = if (genten2) 1 else 0
+      val tensions = (fifths & tensionNotes)
+        .map(_ - root)
+        .flatMap(tensionOnC => tensionPatterns.find(_.pattern == tensionOnC))
+        .map(_.tension)
+      val chord = Chord(root, chordPattern.chordType, bass, tensions)
+      Candidate(2 * priority - 2 * genten1num - genten2num, chord, tensions)
     }
 
-    val maxPriority = candidates.maxBy(_.priority).priority
-    val highPriorityCandidates = candidates.filter(_.priority == maxPriority)
-
-    if (highPriorityCandidates.length > MaxCandicates) Nil
-    else highPriorityCandidates.map(c => Chord(c.root, c.chordType)).toList
-  }
-
-  def addBass(chord: Chord, pitchs: Set[Pitch]): Chord = {
-    val bass = pitchs.minBy(_.toMidiNoteNumber.value)
-    chord.withBass(bass.fifth)
-  }
-
-  def addTensions(chord: Chord, pitchs: Set[Pitch]): Chord = {
-    val pattern: Set[FifthName] = 
-      chordPatterns.find(_.chordType == chord.chordType).get.pattern.map(_ + chord.bass)
-    val diff = pitchs.map(_.fifth) &~ pattern
-
-    val tensions: Seq[Tension] = for {
-      tensionPattern <- tensionPatterns
-      shifted = chord.root + tensionPattern.pattern if diff(shifted)
-    } yield tensionPattern.tension
-
-    tensions.foldLeft(chord)((c, t) => c.withTensions(t))
   }
 
   def calculate(pitchs: Set[Pitch]): Either[Set[Chord], Chord] = {
 
-    val chords = calculateChords(pitchs)
-      .map(c => addBass(c, pitchs))
-      .map(c => addTensions(c, pitchs))
-
     if (pitchs.size == 0) Left(Set())
-    else chords match {
-      case Nil => Left(Set())
-      case chord :: Nil => Right(chord)
-      case _ => Left(chords.toSet)
+    else {
+      val candidates = calculateCandidates(pitchs)
+      val maxPriority = candidates.maxBy(_.priority).priority
+      val highPriorityCandidates = candidates.filter(_.priority == maxPriority)
+
+      highPriorityCandidates match {
+        case Nil => Left(Set())
+        case c :: Nil => Right(c.chord)
+        case cs if highPriorityCandidates.length <= MaxCandicates => Left(cs.map(_.chord).toSet)
+        case _ => Left(Set())
+      }
     }
 
   }
