@@ -16,6 +16,20 @@ object ChordNaming {
     ChordPattern(MajorSeventh, Set(C, E, G, B)) :: Nil
   }
 
+  case class TensionPattern(tension: Tension, pattern: FifthName)
+  val tensionPatterns = {
+    import Tension._
+    import FifthName._
+
+    TensionPattern(Ninth, D) ::
+    TensionPattern(FlatNinth, Db) ::
+    TensionPattern(SharpNinth, Ds) ::
+    TensionPattern(Eleventh, F) ::
+    TensionPattern(SharpEleventh, Fs) ::
+    TensionPattern(Thirteenth, A) ::
+    TensionPattern(FlatThirteenth, Ab) :: Nil
+  }
+
   def calculateChords(pitchs: Set[Pitch]): List[Chord] = {
     val fifths: Set[FifthName] = pitchs.map(_.fifth)
 
@@ -37,26 +51,29 @@ object ChordNaming {
     else highPriorityCandidates.map(c => Chord(c.root, c.chordType)).toList
   }
 
-  def addTensions(chord: Chord, pitchs: Set[Pitch]): Chord = {
-    val pattern: Set[FifthName] = 
-      chordPatterns.find(_.chordType == chord.chordType).get.pattern.map(_ + chord.bass)
-    val diff = pitchs.map(_.fifth) &~ pattern
-    val shifted = chord.root + FifthName.D
-
-    if (diff(shifted)) chord.withTensions(Tension.AddNinth)
-    else chord
-  }
-
   def addBass(chord: Chord, pitchs: Set[Pitch]): Chord = {
     val bass = pitchs.minBy(_.toMidiNoteNumber.value)
     chord.withBass(bass.fifth)
   }
 
+  def addTensions(chord: Chord, pitchs: Set[Pitch]): Chord = {
+    val pattern: Set[FifthName] = 
+      chordPatterns.find(_.chordType == chord.chordType).get.pattern.map(_ + chord.bass)
+    val diff = pitchs.map(_.fifth) &~ pattern
+
+    val tensions: Seq[Tension] = for {
+      tensionPattern <- tensionPatterns
+      shifted = chord.root + tensionPattern.pattern if diff(shifted)
+    } yield tensionPattern.tension
+
+    tensions.foldLeft(chord)((c, t) => c.withTensions(t))
+  }
+
   def calculate(pitchs: Set[Pitch]): Either[Set[Chord], Chord] = {
 
     val chords = calculateChords(pitchs)
-      .map(c => addTensions(c, pitchs))
       .map(c => addBass(c, pitchs))
+      .map(c => addTensions(c, pitchs))
 
     if (pitchs.size == 0) Left(Set())
     else chords match {

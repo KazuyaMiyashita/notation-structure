@@ -61,80 +61,96 @@ class ChordNamingSpec extends WordSpec with Matchers {
   "root C add9" should {
 
     "(C4, D4, E4, G4) to C add9" in {
-      nameof(C4, D4, E4, G4) shouldEqual Right(Chord(C, Major).withTensions(AddNinth))
+      nameof(C4, D4, E4, G4) shouldEqual Right(Chord(C, Major).withTensions(Ninth))
     }
 
     "(C4, D4, Eb4, G4) to Cm add9" in {
-      nameof(C4, D4, Eb4, G4) shouldEqual Right(Chord(C, Minor).withTensions(AddNinth))
+      nameof(C4, D4, Eb4, G4) shouldEqual Right(Chord(C, Minor).withTensions(Ninth))
     }
 
     "(C4, D4, E4, G4, Bb4) to C7 add9" in {
-      nameof(C4, D4, E4, G4, Bb4) shouldEqual Right(Chord(C, Seventh).withTensions(AddNinth))
+      nameof(C4, D4, E4, G4, Bb4) shouldEqual Right(Chord(C, Seventh).withTensions(Ninth))
     }
 
     "(C4, D4, Eb4, G4, Bb4) to Cm7 add9" is (pending)
     // NOTE: The current situation is
     "(C4, D4, Eb4, G4, Bb4) to Cm7add9 or EbM7/C (currently)" in {
       nameof(C4, D4, Eb4, G4, Bb4) shouldEqual Left(Set(
-        Chord(C, MinorSeventh).withTensions(AddNinth),
+        Chord(C, MinorSeventh).withTensions(Ninth),
         Chord(Eb, MajorSeventh).withBass(C)))
     }
     // NOTE: But I want to be like this
     // "(C4, D4, Eb4, G4, Bb4) to Cm7 add9" in {
-    //   nameof(C4, D4, Eb4, G4, Bb4) shouldEqual Right(Chord(C, MinorSeventh).withTensions(AddNinth))
+    //   nameof(C4, D4, Eb4, G4, Bb4) shouldEqual Right(Chord(C, MinorSeventh).withTensions(Ninth))
     // }
 
     "(C4, D4, E4, G4, B4) to CM7 add9" is (pending)
     // NOTE: The current situation is
     "(C4, D4, E4, G4, B4) to CM7add9 or Em7/C (currently)" in {
       nameof(C4, D4, E4, G4, B4) shouldEqual Left(Set(
-        Chord(C, MajorSeventh).withTensions(AddNinth),
+        Chord(C, MajorSeventh).withTensions(Ninth),
         Chord(E, MinorSeventh).withBass(C)))
     }
     // NOTE: But I want to be like this
     // "(C4, D4, E4, G4, B4) to CM7 add9" in {
-    //   nameof(C4, D4, E4, G4, B4) shouldEqual Right(Chord(C, MajorSeventh).withTensions(AddNinth))
+    //   nameof(C4, D4, E4, G4, B4) shouldEqual Right(Chord(C, MajorSeventh).withTensions(Ninth))
     // }
+
+    "(C4, E4, G4, Bb4, Db5) to C7(b9)" in {
+      nameof(C4, E4, G4, Bb4, Db5) shouldEqual Right(Chord(C, Seventh).withTensions(FlatNinth))
+    }
+
+    "(C4, E4, G4, Bb4, Ds5) to C7(#9)" in {
+      nameof(C4, E4, G4, Bb4, Ds5) shouldEqual Right(Chord(C, Seventh).withTensions(SharpNinth))
+    }
 
   }
 
   "root D add9" should {
 
     "(D4, E4, Fs4, A4) to D add9" in {
-      nameof(D4, E4, Fs4, A4) shouldEqual Right(Chord(D, Major).withTensions(AddNinth))
+      nameof(D4, E4, Fs4, A4) shouldEqual Right(Chord(D, Major).withTensions(Ninth))
     }
 
     "(D4, E4, F4, A4) to Dm add9" in {
-      nameof(D4, E4, F4, A4) shouldEqual Right(Chord(D, Minor).withTensions(AddNinth))
+      nameof(D4, E4, F4, A4) shouldEqual Right(Chord(D, Minor).withTensions(Ninth))
     }
 
     "(D4, E4, Fs4, A4, C5) to D7 add9" in {
-      nameof(D4, E4, Fs4, A4, C5) shouldEqual Right(Chord(D, Seventh).withTensions(AddNinth))
+      nameof(D4, E4, Fs4, A4, C5) shouldEqual Right(Chord(D, Seventh).withTensions(Ninth))
     }
 
     "(D4, E4, F4, A4, C5) to Dm7 add9" is (pending)
     // NOTE: The current situation is
     "(D4, E4, F4, A4, C5) to Dm7add9 or FM7/D (currently)" in {
       nameof(D4, E4, F4, A4, C5) shouldEqual Left(Set(
-        Chord(D, MinorSeventh).withTensions(AddNinth),
+        Chord(D, MinorSeventh).withTensions(Ninth),
         Chord(F, MajorSeventh).withBass(D)))
     }
     // NOTE: But I want to be like this
     // "(D4, E4, F4, A4, C5) to Dm7 add9" in {
-    //   nameof(D4, E4, F4, A4, C5) shouldEqual Right(Chord(D, MinorSeventh).withTensions(AddNinth))
+    //   nameof(D4, E4, F4, A4, C5) shouldEqual Right(Chord(D, MinorSeventh).withTensions(Ninth))
     // }
 
     "(D4, E4, Fs4, A4, Cs5) to DM7 add9" is (pending)
     // NOTE: The current situation is
     "(D4, E4, Fs4, A4, Cs5) to DM7add9 or F#m7/D (currently)" in {
       nameof(D4, E4, Fs4, A4, Cs5) shouldEqual Left(Set(
-        Chord(D, MajorSeventh).withTensions(AddNinth),
+        Chord(D, MajorSeventh).withTensions(Ninth),
         Chord(Fs, MinorSeventh).withBass(D)))
     }
     // NOTE: But I want to be like this
     // "(D4, E4, Fs4, A4, Cs5) to DM7 add9" in {
-    //   nameof(D4, E4, Fs4, A4, Cs5) shouldEqual Right(Chord(D, MajorSeventh).withTensions(AddNinth))
+    //   nameof(D4, E4, Fs4, A4, Cs5) shouldEqual Right(Chord(D, MajorSeventh).withTensions(Ninth))
     // }
+
+    "(D4, Fs4, A4, C5, Eb5) to D7(b9)" in {
+      nameof(D4, Fs4, A4, C5, Eb5) shouldEqual Right(Chord(D, Seventh).withTensions(FlatNinth))
+    }
+
+    "(D4, Fs4, A4, C5, Es5) to D7(#9)" in {
+      nameof(D4, Fs4, A4, C5, Es5) shouldEqual Right(Chord(D, Seventh).withTensions(SharpNinth))
+    }
 
   }
 
@@ -247,6 +263,60 @@ class ChordNamingSpec extends WordSpec with Matchers {
     "(D4, Fs4, A4, CM5, Cs4) to DM7 / C#" in {
       nameof(D4, Fs4, A4, Cs5, Cs4) shouldEqual Right(Chord(D, MajorSeventh).withBass(Cs))
     }
+
+  }
+
+  "root C with complex tensions" should {
+
+    "(C4, E4, G4, Bb4, D5, Fs5) to C7(9,#11)" in {
+      nameof(C4, E4, G4, Bb4, D5, Fs5) shouldEqual Right(Chord(C, Seventh).withTensions(Ninth, SharpEleventh))
+    }
+
+    "(C4, E4, G4, Bb4, D5, F5, Ab5) to C7(9,11,b13)" is (pending)
+    // NOTE: The current situation is
+    "(C4, E4, G4, Bb4, D5, F5, Ab5) to C7(9,11,b13) or Bb7/C or Gm7(b9,13)/C (currently)" in {
+      nameof(C4, E4, G4, Bb4, D5, F5, Ab5) shouldEqual Left(Set(
+        Chord(C, Seventh).withTensions(Ninth, Eleventh, FlatThirteenth),
+        Chord(Bb, Seventh).withBass(C),
+        Chord(G, MinorSeventh).withTensions(FlatNinth, Thirteenth).withBass(C)))
+    }
+    // NOTE: But I want to be like this
+    // "(C4, E4, G4, Bb4, D5, F5, Ab5) to C7(9,11,b13)" in {
+    //   nameof(C4, E4, G4, Bb4, D5, F5, Ab5) shouldEqual Right(Chord(C, Seventh).withTensions(Ninth, Eleventh, FlatThirteenth))
+    // }
+    
+    "(C4, E4, G4, Bb4, D5, F5, A5) to C7(9,11,13)" is (pending)
+    // NOTE: The current situation is
+    "(C4, E4, G4, Bb4, D5, F5, A5) to C7(9,11,13) (currently)" in {
+      nameof(C4, E4, G4, Bb4, D5, F5, A5) shouldEqual Left(Set())
+    }
+    // NOTE: But I want to be like this
+    // "(C4, E4, G4, Bb4, D5, F5, A5) to C7(9,11,13)" in {
+    //   nameof(C4, E4, G4, Bb4, D5, F5, A5) shouldEqual Right(Chord(C, Seventh).withTensions(Ninth, Eleventh, Thirteenth))
+    // }
+
+    "(C4, E4, G4, B4, D5, Fs5, A5) to CM7(9,#11,13)" is (pending)
+    // NOTE: The current situation is
+    "(C4, E4, G4, B4, D5, Fs5, A5) to CM7(9,#11,13) (currently)" in {
+      nameof(C4, E4, G4, B4, D5, Fs5, A5) shouldEqual Left(Set())
+    }
+    // NOTE: But I want to be like this
+    // "(C4, E4, G4, B4, D5, Fs5, A5) to CM7(9,#11,13)" in {
+    //   nameof(C4, E4, G4, B4, D5, Fs5, A5) shouldEqual Right(Chord(C, MajorSeventh).withTensions(Ninth, SharpEleventh, Thirteenth))
+    // }
+
+    "(C4, Eb4, G4, Bb4, D5, F5) to Cm7(9,11)" is (pending)
+    // NOTE: The current situation is
+    "(C4, Eb4, G4, Bb4, D5, F5) to Cm7(9,11) or Gm7/C or EbM7(9)/C (currently)" in {
+      nameof(C4, Eb4, G4, Bb4, D5, F5) shouldEqual Left(Set(
+        Chord(C, MinorSeventh).withTensions(Ninth, Eleventh),
+        Chord(G, MinorSeventh).withBass(C),
+        Chord(Eb, MajorSeventh).withTensions(Ninth).withBass(C)))
+    }
+    // NOTE: But I want to be like this
+    // "(C4, Eb4, G4, Bb4, D5, F5) to Cm7(9,11)" in {
+    //   nameof(C4, Eb4, G4, Bb4, D5, F5) shouldEqual Right(Chord(C, MinorSeventh).withTensions(Ninth, Eleventh))
+    // }
 
   }
 
