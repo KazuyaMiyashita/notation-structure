@@ -60,7 +60,7 @@ object ChordNaming {
       val genten1num: Int = if (genten1) 1 else 0
       val genten2: Boolean = root != bass
       val genten2num: Int = if (genten2) 1 else 0
-      val tensions = (fifths & tensionNotes)
+      val tensions = ((fifths & tensionNotes) - bass)
         .map(_ - root)
         .flatMap(tensionOnC => tensionPatterns.find(_.pattern == tensionOnC))
         .map(_.tension)
