@@ -2,6 +2,7 @@ package core
 
 sealed trait Tension {
   def name: String
+  override def toString = name
 }
 
 object Tension {
