@@ -25,20 +25,6 @@ object ChordNaming {
     ChordPattern(MajorSeventh, Set(C, E, G, B), Set(F), Set(D, Fs, A)) :: Nil
   }
 
-  case class TensionPattern(tension: Tension, pattern: FifthName)
-  val tensionPatterns = {
-    import Tension._
-    import FifthName._
-
-    TensionPattern(Ninth, D) ::
-    TensionPattern(FlatNinth, Db) ::
-    TensionPattern(SharpNinth, Ds) ::
-    TensionPattern(Eleventh, F) ::
-    TensionPattern(SharpEleventh, Fs) ::
-    TensionPattern(Thirteenth, A) ::
-    TensionPattern(FlatThirteenth, Ab) :: Nil
-  }
-
   case class Candidate(priority: Int, chord: Chord, tensions: Set[Tension])
   def calculateCandidates(pitchs: Set[Pitch]): List[Candidate] = {
     val fifths: Set[FifthName] = pitchs.map(_.fifth)
@@ -60,10 +46,7 @@ object ChordNaming {
       val genten1num: Int = if (genten1) 1 else 0
       val genten2: Boolean = root != bass
       val genten2num: Int = if (genten2) 1 else 0
-      val tensions = ((fifths & tensionNotes) - bass)
-        .map(_ - root)
-        .flatMap(tensionOnC => tensionPatterns.find(_.pattern == tensionOnC))
-        .map(_.tension)
+      val tensions = ((fifths & tensionNotes) - bass).flatMap(f => Tensions.find(f, root))
       val chord = Chord(root, chordPattern.chordType, bass, tensions)
       Candidate(2 * priority - 2 * genten1num - genten2num, chord, tensions)
     }
