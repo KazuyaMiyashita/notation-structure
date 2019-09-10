@@ -24,9 +24,16 @@ object ChordNaming {
   }
 
   case class Candidate(scoreing: Scoreing, chord: Chord)
-  case class Scoreing(commonSize: Int, avoidSize: Int, diffSize: Int, genten1: Int, genten2: Int) {
+  case class Scoreing(
+    common: Set[FifthInterval],
+    avoid: Set[FifthInterval],
+    diff1: Set[FifthInterval],
+    diff2: Set[FifthInterval],
+    genten1: Int,
+    genten2: Int
+  ) {
     val priority: Int = {
-      (4 * (commonSize - avoidSize - diffSize)) - (3 * genten1) - (2 * genten2)
+      (4 * common.size) + (-4 * avoid.size) + (-2 * diff1.size) + (-2 * diff2.size) + (-3 * genten1) + (-3 * genten2)
     }
   }
   def calculateCandidates(absPitchs: Set[Pitch]): List[Candidate] = {
@@ -39,12 +46,15 @@ object ChordNaming {
     } yield {
       val intervals: Set[FifthInterval] = absPitchs.map(p => FifthInterval(p.fifth - absRoot))
       val bass = FifthInterval(absBass - absRoot)
+      val tensions: Set[Tension] = chordPattern.tensionNotes
+        .filter(t => intervals(t.interval))
+        .filter(t => t.interval != bass)
 
       val commonChordTones: Set[FifthInterval] = (chordPattern.chordTones & intervals)
       val commonAvoidNones: Set[FifthInterval] = chordPattern.avoidNotes & intervals
-      val commonTensionNotes: Set[Tension] =
-        chordPattern.tensionNotes.filter(t => intervals(t.interval))
-        .filter(t => t.interval != bass)
+
+      val diff1: Set[FifthInterval] = chordPattern.chordTones &~ intervals
+      val diff2: Set[FifthInterval] = intervals &~ (commonChordTones + bass)
 
       val genten1: Int = {
         import FifthIntervalName._
@@ -54,12 +64,13 @@ object ChordNaming {
       val genten2: Int = if (bass != FifthIntervalName.PerUnison) 1 else 0
 
       val scoreing = Scoreing(
-        commonSize = commonChordTones.size,
-        avoidSize = commonAvoidNones.size,
-        diffSize = (chordPattern.chordTones &~ intervals).size,
+        common = commonChordTones,
+        avoid = commonAvoidNones,
+        diff1 = diff1,
+        diff2 = diff2,
         genten1, genten2)
 
-      val chord = Chord(absRoot, chordPattern.chordType, absBass, commonTensionNotes)
+      val chord = Chord(absRoot, chordPattern.chordType, absBass, tensions)
       Candidate(scoreing, chord)
     }
 
