@@ -258,5 +258,21 @@ class ChordNamingSpec extends WordSpec with Matchers {
 
   }
 
+  "slash chords" should {
+
+    "(G3, F4, A4, C5) to F / G" in {
+      nameof(G3, F4, A4, C5) shouldEqual Right(Chord(F, Major).withBass(G))
+    }
+
+    "(G3, F4, A4, C5, D5) to Dm7 / G" in {
+      nameof(G3, F4, A4, C5, D5) shouldEqual Right(Chord(D, MinorSeventh).withBass(G))
+    }
+
+    "(A3, Ab4, C5, Eb5) to Ab / A" in {
+      nameof(A3, Ab4, C5, Eb5) shouldEqual Right(Chord(Ab, Major).withBass(A))
+    }
+
+  }
+
 
 }
