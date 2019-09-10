@@ -82,15 +82,6 @@ object ChordNaming {
 
   }
 
-  private def debugPrint(pitchs: Set[Pitch], candidates: Seq[Candidate]): Unit = {
-    println(pitchs.map(_.fifth.name).mkString(" "))
-    candidates.sortWith((c1, c2) => c1.scoreing.priority >= c2.scoreing.priority).foreach { c =>
-      print(c.scoreing.priority.toString + " : ")
-      println(c)
-    }
-    println()
-  }
-
   def calculate(pitchs: Set[Pitch]): Either[Set[Chord], Chord] = {
 
     if (pitchs.size == 0) Left(Set())
@@ -98,8 +89,6 @@ object ChordNaming {
       val candidates = calculateCandidates(pitchs)
       val maxPriority = candidates.maxBy(_.scoreing.priority).scoreing.priority
       val highPriorityCandidates = candidates.filter(_.scoreing.priority == maxPriority)
-
-      debugPrint(pitchs, candidates)
 
       highPriorityCandidates match {
         case Nil => Left(Set())
