@@ -20,11 +20,16 @@ object ChordNaming {
     ChordPattern(Seventh, Set(PerUnison, MajThird, PerFifth, MinSeventh), Set(PerFourth), Set(FlatNinth, Ninth, SharpNinth, SharpEleventh, FlatThirteenth, Thirteenth)) ::
     ChordPattern(MinorSeventh, Set(PerUnison, MinThird, PerFifth, MinSeventh), Set(), Set(FlatNinth, Ninth, Eleventh, FlatThirteenth, Thirteenth)) ::
     ChordPattern(MajorSeventh, Set(PerUnison, MajThird, PerFifth, MajSeventh), Set(PerFourth), Set(Ninth, SharpEleventh, Thirteenth)) ::
-    ChordPattern(Suspended, Set(PerUnison, PerFourth, PerFifth), Set(MinThird, MajThird, DimSeventh, MinSeventh), Set()) :: Nil
+    ChordPattern(Diminished, Set(PerUnison, MinThird, DimFifth), Set(DimSeventh, MinSeventh), Set()) ::
+    ChordPattern(DiminishedSeventh, Set(PerUnison, MinThird, DimFifth, DimSeventh), Set(MinSeventh), Set()) ::
+    ChordPattern(HalfDiminishedSeventh, Set(PerUnison, MinThird, DimFifth, MinSeventh), Set(DimSeventh), Set()) ::
+    ChordPattern(Suspended, Set(PerUnison, PerFourth, PerFifth), Set(MinThird, MajThird, DimSeventh, MinSeventh), Set()) ::
+    ChordPattern(SuspendedSeventh, Set(PerUnison, PerFourth, PerFifth, MinSeventh), Set(MinThird, MajThird, DimSeventh), Set()) :: Nil
   }
 
   case class Candidate(scoreing: Scoreing, chord: Chord)
   case class Scoreing(
+    intervals: Set[FifthInterval],
     common: Set[FifthInterval],
     avoid: Set[FifthInterval],
     diff1: Set[FifthInterval],
@@ -34,6 +39,7 @@ object ChordNaming {
   ) {
     val priority: Int = {
       (4 * common.size) + (-4 * avoid.size) + (-2 * diff1.size) + (-2 * diff2.size) + (-3 * genten1) + (-3 * genten2)
+      // (4 * common.size) + (-4 * avoid.size) + (-2 * diff1.size) + (-3 * diff2.size) + (-3 * genten1) + (-2 * genten2)
     }
   }
   def calculateCandidates(absPitchs: Set[Pitch]): List[Candidate] = {
@@ -50,7 +56,7 @@ object ChordNaming {
         .filter(t => intervals(t.interval))
         .filter(t => t.interval != bass)
 
-      val commonChordTones: Set[FifthInterval] = (chordPattern.chordTones & intervals)
+      val commonChordTones: Set[FifthInterval] = chordPattern.chordTones & intervals
       val commonAvoidNones: Set[FifthInterval] = chordPattern.avoidNotes & intervals
 
       val diff1: Set[FifthInterval] = chordPattern.chordTones &~ intervals
@@ -64,6 +70,7 @@ object ChordNaming {
       val genten2: Int = if (bass != FifthIntervalName.PerUnison) 1 else 0
 
       val scoreing = Scoreing(
+        intervals = intervals,
         common = commonChordTones,
         avoid = commonAvoidNones,
         diff1 = diff1,
