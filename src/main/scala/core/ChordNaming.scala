@@ -4,57 +4,98 @@ object ChordNaming {
 
   val MaxCandicates = 3
 
-  case class ChordPattern(chordType: ChordType, pattern: Set[FifthName])
+  case class ChordPattern(
+    chordType: ChordType,
+    chordTones: Set[FifthInterval],
+    avoidNotes: Set[FifthInterval],
+    tensionNotes: Set[Tension]
+  )
   val chordPatterns = {
     import ChordType._
-    import FifthName._
+    import FifthIntervalName._
+    import Tension._
 
-    ChordPattern(Major, Set(C, E, G)) ::
-    ChordPattern(Minor, Set(C, Eb, G)) ::
-    ChordPattern(MajorSeventh, Set(C, E, G, Bb)) ::
-    ChordPattern(MinorSeventh, Set(C, Eb, G, Bb)) :: Nil
+    ChordPattern(Major,Set(PerUnison, MajThird, PerFifth), Set(PerFourth, MinSeventh), Set(Ninth, SharpEleventh, Thirteenth)) ::
+    ChordPattern(Minor, Set(PerUnison, MinThird, PerFifth), Set(MinSecond, MinSeventh), Set(Ninth, Eleventh)) ::
+    ChordPattern(Seventh, Set(PerUnison, MajThird, PerFifth, MinSeventh), Set(PerFourth), Set(FlatNinth, Ninth, SharpNinth, SharpEleventh, FlatThirteenth, Thirteenth)) ::
+    ChordPattern(MinorSeventh, Set(PerUnison, MinThird, PerFifth, MinSeventh), Set(), Set(FlatNinth, Ninth, Eleventh, FlatThirteenth, Thirteenth)) ::
+    ChordPattern(MajorSeventh, Set(PerUnison, MajThird, PerFifth, MajSeventh), Set(PerFourth), Set(Ninth, SharpEleventh, Thirteenth)) ::
+    ChordPattern(Diminished, Set(PerUnison, MinThird, DimFifth), Set(DimSeventh, MinSeventh, DimOctave), Set()) ::
+    ChordPattern(DiminishedSeventh, Set(PerUnison, MinThird, DimFifth, DimSeventh), Set(MinSeventh), Set()) ::
+    ChordPattern(HalfDiminishedSeventh, Set(PerUnison, MinThird, DimFifth, MinSeventh), Set(DimSeventh), Set()) ::
+    ChordPattern(Suspended, Set(PerUnison, PerFourth, PerFifth), Set(MinSecond, MajSecond, MinThird, MajThird, DimSeventh, MinSeventh), Set()) ::
+    ChordPattern(SuspendedSeventh, Set(PerUnison, PerFourth, PerFifth, MinSeventh), Set(MinSecond, MajSecond, MinThird, MajThird, DimSeventh), Set()) :: Nil
   }
 
-  def calculateChords(pitchs: Set[Pitch]): List[Chord] = {
-    val fifths: Set[FifthName] = pitchs.map(_.fifth)
+  case class Candidate(scoreing: Scoreing, chord: Chord)
+  case class Scoreing(
+    intervals: Set[FifthInterval],
+    common: Set[FifthInterval],
+    avoid: Set[FifthInterval],
+    diff1: Set[FifthInterval],
+    diff2: Set[FifthInterval],
+    genten1: Int,
+    genten2: Int
+  ) {
+    val priority: Int = {
+      (4 * common.size) + (-4 * avoid.size) + (-2 * diff1.size) + (-2 * diff2.size) + (-3 * genten1) + (-3 * genten2)
+    }
+  }
+  def calculateCandidates(absPitchs: Set[Pitch]): List[Candidate] = {
+    val absFifths: Set[FifthName] = absPitchs.map(_.fifth)
+    val absBass: FifthName = absPitchs.minBy(_.toMidiNoteNumber.value).fifth
 
-    case class Candicate(priority: Int, root: FifthName, chordType: ChordType)
-    val candidates: Seq[Candicate] = for {
-      root <- fifths.toList
+    for {
+      absRoot <- absFifths.toList
       chordPattern <- chordPatterns
-      shifted = chordPattern.pattern.map(_ + root)
-      common = (shifted & fifths).size if common >= 0
-      diff = (shifted &~ fifths).size
     } yield {
-      Candicate(common - diff, root, chordPattern.chordType)
+      val intervals: Set[FifthInterval] = absPitchs.map(p => FifthInterval(p.fifth - absRoot))
+      val bass = FifthInterval(absBass - absRoot)
+      val tensions: Set[Tension] = chordPattern.tensionNotes
+        .filter(t => intervals(t.interval))
+        .filter(t => t.interval != bass)
+
+      val commonChordTones: Set[FifthInterval] = chordPattern.chordTones & intervals
+      val commonAvoidNones: Set[FifthInterval] = chordPattern.avoidNotes & intervals
+
+      val diff1: Set[FifthInterval] = chordPattern.chordTones &~ intervals
+      val diff2: Set[FifthInterval] = intervals &~ (commonChordTones + bass)
+
+      val genten1: Int = {
+        import FifthIntervalName._
+        val isGenten = Set(MinSixth, MajSixth).contains(bass)
+        if (isGenten) 1 else 0
+      }
+      val genten2: Int = if (bass != FifthIntervalName.PerUnison) 1 else 0
+
+      val scoreing = Scoreing(
+        intervals = intervals,
+        common = commonChordTones,
+        avoid = commonAvoidNones,
+        diff1 = diff1,
+        diff2 = diff2,
+        genten1, genten2)
+
+      val chord = Chord(absRoot, chordPattern.chordType, absBass, tensions)
+      Candidate(scoreing, chord)
     }
 
-    val maxPriority = candidates.maxBy(_.priority).priority
-    val highPriorityCandidates = candidates.filter(_.priority == maxPriority)
-
-    if (highPriorityCandidates.length > MaxCandicates) Nil
-    else highPriorityCandidates.map(c => Chord(c.root, c.chordType)).toList
   }
 
-  def addTensions(chord: Chord, pitchs: Set[Pitch]): Chord = {
-    val pattern: Set[FifthName] = 
-      chordPatterns.find(_.chordType == chord.chordType).get.pattern.map(_ + chord.bass)
-    val diff = pitchs.map(_.fifth) &~ pattern
-    val shifted = chord.root + FifthName.D
+  def calculate(pitchs: Set[Pitch]): Either[Set[Chord], Chord] = {
 
-    if (diff(shifted)) chord.withTensions(Tension.AddNinth)
-    else chord
-  }
+    if (pitchs.size == 0) Left(Set())
+    else {
+      val candidates = calculateCandidates(pitchs)
+      val maxPriority = candidates.maxBy(_.scoreing.priority).scoreing.priority
+      val highPriorityCandidates = candidates.filter(_.scoreing.priority == maxPriority)
 
-  def calculate(pitchs: Set[Pitch]): Either[List[Chord], Chord] = {
-
-    val chords = calculateChords(pitchs).map(c => addTensions(c, pitchs))
-
-    if (pitchs.size == 0) Left(Nil)
-    else chords match {
-      case Nil => Left(Nil)
-      case chord :: Nil => Right(chord)
-      case _ => Left(chords)
+      highPriorityCandidates match {
+        case Nil => Left(Set())
+        case c :: Nil => Right(c.chord)
+        case cs if highPriorityCandidates.length <= MaxCandicates => Left(cs.map(_.chord).toSet)
+        case _ => Left(Set())
+      }
     }
 
   }
