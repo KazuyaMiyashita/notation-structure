@@ -25,46 +25,25 @@ object ChordNaming {
   case class Candidate(scoreing: Scoreing, chord: Chord)
   case class Scoreing(commonSize: Int, avoidSize: Int, diffSize: Int, genten1: Int, genten2: Int) {
     val priority: Int = {
-      2 * (commonSize - avoidSize - diffSize) - 2 * genten1 - genten2
+      (4 * (commonSize - avoidSize - diffSize)) - (3 * genten1) - (2 * genten2)
     }
   }
   def calculateCandidates(absPitchs: Set[Pitch]): List[Candidate] = {
     val absFifths: Set[FifthName] = absPitchs.map(_.fifth)
     val absBass: FifthName = absPitchs.minBy(_.toMidiNoteNumber.value).fifth
 
-    // for {
-    //   root <- absoluteFifths.toList
-    //   chordPattern <- chordPatterns
-    //   // chordTones = chordPattern.chordTones(root)
-    //   // avoidNotes = chordPattern.avoidNotes(root)
-    //   // tensionNotes = chordPattern.tensionNotes(root)
-    //   // commonSize = (chordTones & absoluteFifths).size if commonSize >= 1
-    //   // tensionSize = (tensionNotes & absoluteFifths).size
-    //   // avoidSize = (avoidNotes & absoluteFifths).size
-    //   // diffSize = (chordTones &~ absoluteFifths).size
-    //   // priority = commonSize - avoidSize - diffSize if priority >= 1
-    // } yield {
-    //   // val bass = absolutePitchs.minBy(_.toMidiNoteNumber.value).fifth
-    //   // val genten1: Boolean = Set(FifthName.F, FifthName.A, FifthName.Ab).contains(bass - root)
-    //   // val genten1num: Int = if (genten1) 1 else 0
-    //   // val genten2: Boolean = root != bass
-    //   // val genten2num: Int = if (genten2) 1 else 0
-    //   // val tensions = ((absoluteFifths & tensionNotes) - bass).flatMap(f => Tensions.find(f, root))
-    //   // val chord = Chord(root, chordPattern.chordType, bass, tensions)
-    //   // Candidate(2 * priority - 2 * genten1num - genten2num, chord, tensions)
-    //   ???
-    // }
-
     for {
       absRoot <- absFifths.toList
       chordPattern <- chordPatterns
     } yield {
       val intervals: Set[FifthInterval] = absPitchs.map(p => FifthInterval(p.fifth - absRoot))
+      val bass = FifthInterval(absBass - absRoot)
+
       val commonChordTones: Set[FifthInterval] = chordPattern.chordTones & intervals
       val commonAvoidNones: Set[FifthInterval] = chordPattern.avoidNotes & intervals
-      val commonTensionNotes: Set[Tension] = chordPattern.tensionNotes.filter(t => intervals(t.interval))
-
-      val bass = FifthInterval(absBass - absRoot)
+      val commonTensionNotes: Set[Tension] =
+        chordPattern.tensionNotes.filter(t => intervals(t.interval))
+        .filter(t => t.interval != bass)
 
       val genten1: Int = {
         import FifthIntervalName._
@@ -85,6 +64,15 @@ object ChordNaming {
 
   }
 
+  private def debugPrint(pitchs: Set[Pitch], candidates: Seq[Candidate]): Unit = {
+    println(pitchs.map(_.fifth.name).mkString(" "))
+    candidates.sortWith((c1, c2) => c1.scoreing.priority >= c2.scoreing.priority).foreach { c =>
+      print(c.scoreing.priority.toString + " : ")
+      println(c)
+    }
+    println()
+  }
+
   def calculate(pitchs: Set[Pitch]): Either[Set[Chord], Chord] = {
 
     if (pitchs.size == 0) Left(Set())
@@ -93,12 +81,7 @@ object ChordNaming {
       val maxPriority = candidates.maxBy(_.scoreing.priority).scoreing.priority
       val highPriorityCandidates = candidates.filter(_.scoreing.priority == maxPriority)
 
-      println(pitchs.map(_.fifth.name).mkString(" "))
-      candidates.sortWith((c1, c2) => c1.scoreing.priority >= c2.scoreing.priority).foreach { c =>
-        print(c.scoreing.priority.toString + " : ")
-        println(c)
-      }
-      println()
+      debugPrint(pitchs, candidates)
 
       highPriorityCandidates match {
         case Nil => Left(Set())
