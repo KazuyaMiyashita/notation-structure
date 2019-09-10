@@ -11,9 +11,9 @@ object Main extends App {
     infos.map { info => MidiSystem.getMidiDevice(info) }
   }
 
-  def dumpDeviceInfo(device: MidiDevice): Unit = {
+  def dumpDeviceInfo(device: MidiDevice, num: Int): Unit = {
     val info: MidiDevice.Info = device.getDeviceInfo();
-    println("devinfo: " + info.toString())
+    println(s"[${num}] devinfo: " + info.toString())
     println("  name:"        + info.getName())
     println("  vendor:"      + info.getVendor())
     println("  version:"     + info.getVersion())
@@ -33,7 +33,20 @@ object Main extends App {
     case Failure(e) => println(e)
     case Success(devices) => {
       if (devices.length == 0) println("no devices")
-      else devices.foreach(dumpDeviceInfo)
+      else {
+        devices.zipWithIndex.foreach { case (device, num) => dumpDeviceInfo(device, num) }
+        println("enter your midi device number >")
+        val deviceNum = io.StdIn.readLine().toInt
+        println(deviceNum)
+        val device = devices(deviceNum)
+        val receiver = new MyMidiReceiver
+        device.open()
+        device.getTransmitter().setReceiver(receiver)
+        println("enter to exit >")
+        io.StdIn.readLine()
+        device.close()
+        receiver.close()
+      }
     }
   }
 
