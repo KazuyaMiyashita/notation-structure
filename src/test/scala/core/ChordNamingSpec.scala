@@ -274,5 +274,64 @@ class ChordNamingSpec extends WordSpec with Matchers {
 
   }
 
+  "diminished chords" should {
+
+    "(C4, Eb4, Gb4) to Cdim" in {
+      nameof(C4, Eb4, Gb4) shouldEqual Right(Chord(C, Diminished))
+    }
+
+    "(D4, F4, Ab4) to Ddim" in {
+      nameof(D4, F4, Ab4) shouldEqual Right(Chord(D, Diminished))
+    }
+
+  }
+
+  "diminished seventh chords" should {
+
+    "(C4, Eb4, Gb4, Bbb4) to C7dim" in {
+      nameof(C4, Eb4, Gb4, Bbb4) shouldEqual Right(Chord(C, DiminishedSeventh))
+    }
+
+    "(D4, F4, Ab4, Cb5) to Ddim" in {
+      nameof(D4, F4, Ab4, Cb5) shouldEqual Right(Chord(D, DiminishedSeventh))
+    }
+
+  }
+
+  "half diminished seventh chords" should {
+
+    "(C4, Eb4, Gb4, Bb4) to Cm7-5" in {
+      nameof(C4, Eb4, Gb4, Bb4) shouldEqual Right(Chord(C, HalfDiminishedSeventh))
+    }
+
+    "(D4, F4, Ab4, Cb5) to Dm7-5" in {
+      nameof(D4, F4, Ab4, C5) shouldEqual Right(Chord(D, HalfDiminishedSeventh))
+    }
+
+  }
+
+  "suspended chords" should {
+
+    "(C4, F4, G4) to Csus4" in {
+      nameof(C4, F4, G4) shouldEqual Right(Chord(C, Suspended))
+    }
+
+    "(D4, G4, A4) to Dsus4" in {
+      nameof(D4, G4, A4) shouldEqual Right(Chord(D, Suspended))
+    }
+
+  }
+
+  "suspended seventh chords" should {
+
+    "(C4, F4, G4, Bb4) to C7sus4" in {
+      nameof(C4, F4, G4, Bb4) shouldEqual Right(Chord(C, SuspendedSeventh))
+    }
+
+    "(D4, G4, A4, C5) to D7sus4" in {
+      nameof(D4, G4, A4, C5) shouldEqual Right(Chord(D, SuspendedSeventh))
+    }
+
+  }
 
 }

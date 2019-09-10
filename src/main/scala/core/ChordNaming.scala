@@ -19,7 +19,8 @@ object ChordNaming {
     ChordPattern(Minor, Set(PerUnison, MinThird, PerFifth), Set(MinSecond, MinSeventh), Set(Ninth, Eleventh)) ::
     ChordPattern(Seventh, Set(PerUnison, MajThird, PerFifth, MinSeventh), Set(PerFourth), Set(FlatNinth, Ninth, SharpNinth, SharpEleventh, FlatThirteenth, Thirteenth)) ::
     ChordPattern(MinorSeventh, Set(PerUnison, MinThird, PerFifth, MinSeventh), Set(), Set(FlatNinth, Ninth, Eleventh, FlatThirteenth, Thirteenth)) ::
-    ChordPattern(MajorSeventh, Set(PerUnison, MajThird, PerFifth, MajSeventh), Set(PerFourth), Set(Ninth, SharpEleventh, Thirteenth)) :: Nil
+    ChordPattern(MajorSeventh, Set(PerUnison, MajThird, PerFifth, MajSeventh), Set(PerFourth), Set(Ninth, SharpEleventh, Thirteenth)) ::
+    ChordPattern(Suspended, Set(PerUnison, PerFourth, PerFifth), Set(MinThird, MajThird, DimSeventh, MinSeventh), Set()) :: Nil
   }
 
   case class Candidate(scoreing: Scoreing, chord: Chord)
@@ -39,7 +40,7 @@ object ChordNaming {
       val intervals: Set[FifthInterval] = absPitchs.map(p => FifthInterval(p.fifth - absRoot))
       val bass = FifthInterval(absBass - absRoot)
 
-      val commonChordTones: Set[FifthInterval] = chordPattern.chordTones & intervals
+      val commonChordTones: Set[FifthInterval] = (chordPattern.chordTones & intervals)
       val commonAvoidNones: Set[FifthInterval] = chordPattern.avoidNotes & intervals
       val commonTensionNotes: Set[Tension] =
         chordPattern.tensionNotes.filter(t => intervals(t.interval))
@@ -64,6 +65,15 @@ object ChordNaming {
 
   }
 
+  private def debugPrint(pitchs: Set[Pitch], candidates: Seq[Candidate]): Unit = {
+    println(pitchs.map(_.fifth.name).mkString(" "))
+    candidates.sortWith((c1, c2) => c1.scoreing.priority >= c2.scoreing.priority).foreach { c =>
+      print(c.scoreing.priority.toString + " : ")
+      println(c)
+    }
+    println()
+  }
+
   def calculate(pitchs: Set[Pitch]): Either[Set[Chord], Chord] = {
 
     if (pitchs.size == 0) Left(Set())
@@ -71,6 +81,8 @@ object ChordNaming {
       val candidates = calculateCandidates(pitchs)
       val maxPriority = candidates.maxBy(_.scoreing.priority).scoreing.priority
       val highPriorityCandidates = candidates.filter(_.scoreing.priority == maxPriority)
+
+      debugPrint(pitchs, candidates)
 
       highPriorityCandidates match {
         case Nil => Left(Set())
