@@ -2,40 +2,40 @@ package core
 
 sealed trait Tension {
   def name: String
-  def interval: Interval
+  def interval: FifthInterval
   override def toString = name
 }
 
 object Tension {
-  import Interval._
+  import FifthIntervalName._
 
-  object Ninth extends Tension {
-    override val name = "9"
-    override val interval = MajorSecond + PerfectOctave
-  }
   object FlatNinth extends Tension {
     override val name = "b9"
-    override val interval = MinorSecond + PerfectOctave
+    override val interval = MinSecond + PerOctave
+  }
+  object Ninth extends Tension {
+    override val name = "9"
+    override val interval = MajSecond + PerOctave
   }
   object SharpNinth extends Tension {
     override val name = "#9"
-    override val interval = AugumentedSecond + PerfectOctave
+    override val interval = AugSecond + PerOctave
   }
   object Eleventh extends Tension {
     override val name = "11"
-    override val interval = PerfectFourth + PerfectOctave
+    override val interval = PerFourth + PerOctave
   }
   object SharpEleventh extends Tension {
     override val name = "#11"
-    override val interval = AugumentedFourth + PerfectOctave
-  }
-  object Thirteenth extends Tension {
-    override val name = "13"
-    override val interval = MajorSixth + PerfectOctave
+    override val interval = AugFourth + PerOctave
   }
   object FlatThirteenth extends Tension {
     override val name = "b13"
-    override val interval = MinorSixth + PerfectOctave
+    override val interval = MinSixth + PerOctave
+  }
+  object Thirteenth extends Tension {
+    override val name = "13"
+    override val interval = MajSixth + PerOctave
   }
 
 }
@@ -43,9 +43,9 @@ object Tension {
 object Tensions {
   import Tension._
 
-  def find(fifthName: FifthName, root: FifthName): Option[Tension] = {
-    val interval = fifthName - root
-    ts.find(_.interval.pitchOnC.fifth == interval)
+  def find(absoluteFifth: FifthName, absoluteRoot: FifthName): Option[Tension] = {
+    val interval = absoluteFifth - absoluteRoot
+    ts.find(_.interval.fifth == interval)
   }
 
   private val ts =
