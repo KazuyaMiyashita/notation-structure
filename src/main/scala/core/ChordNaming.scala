@@ -4,29 +4,6 @@ object ChordNaming {
 
   val MaxCandicates = 3
 
-  case class ChordPattern(
-    chordType: ChordType,
-    chordTones: Set[FifthInterval],
-    avoidNotes: Set[FifthInterval],
-    tensionNotes: Set[Tension]
-  )
-  val chordPatterns = {
-    import ChordType._
-    import FifthIntervalName._
-    import Tension._
-
-    ChordPattern(Major,Set(PerUnison, MajThird, PerFifth), Set(PerFourth, MinSeventh), Set(Ninth, SharpEleventh, Thirteenth)) ::
-    ChordPattern(Minor, Set(PerUnison, MinThird, PerFifth), Set(MinSecond, MinSeventh), Set(Ninth, Eleventh)) ::
-    ChordPattern(Seventh, Set(PerUnison, MajThird, PerFifth, MinSeventh), Set(PerFourth), Set(FlatNinth, Ninth, SharpNinth, SharpEleventh, FlatThirteenth, Thirteenth)) ::
-    ChordPattern(MinorSeventh, Set(PerUnison, MinThird, PerFifth, MinSeventh), Set(), Set(FlatNinth, Ninth, Eleventh, FlatThirteenth, Thirteenth)) ::
-    ChordPattern(MajorSeventh, Set(PerUnison, MajThird, PerFifth, MajSeventh), Set(PerFourth), Set(Ninth, SharpEleventh, Thirteenth)) ::
-    ChordPattern(Diminished, Set(PerUnison, MinThird, DimFifth), Set(DimSeventh, MinSeventh, DimOctave), Set()) ::
-    ChordPattern(DiminishedSeventh, Set(PerUnison, MinThird, DimFifth, DimSeventh), Set(MinSeventh), Set()) ::
-    ChordPattern(HalfDiminishedSeventh, Set(PerUnison, MinThird, DimFifth, MinSeventh), Set(DimSeventh), Set()) ::
-    ChordPattern(Suspended, Set(PerUnison, PerFourth, PerFifth), Set(MinSecond, MajSecond, MinThird, MajThird, DimSeventh, MinSeventh), Set()) ::
-    ChordPattern(SuspendedSeventh, Set(PerUnison, PerFourth, PerFifth, MinSeventh), Set(MinSecond, MajSecond, MinThird, MajThird, DimSeventh), Set()) :: Nil
-  }
-
   case class Candidate(scoreing: Scoreing, chord: Chord)
   case class Scoreing(
     intervals: Set[FifthInterval],
@@ -47,7 +24,7 @@ object ChordNaming {
 
     for {
       absRoot <- absFifths.toList
-      chordPattern <- chordPatterns
+      chordPattern <- ChordType.ChordTypes.map(_.pattern)
     } yield {
       val intervals: Set[FifthInterval] = absPitchs.map(p => p.fifth - absRoot)
       val bass = absBass - absRoot
