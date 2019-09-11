@@ -23,6 +23,9 @@ object EnharmonicChordNaming {
       val avg: Double = fifths.map(_.value - FifthName.D.value).sum.toDouble / fifths.size // Dを中心に
       (chord, avg)
     }
+
+    println()
+    chordAvgs.foreach(println)
     
     val maxPriority = chordAvgs.minBy({ case (chord, avg) =>
       math.abs(avg)
