@@ -44,8 +44,8 @@ object Tensions {
   import Tension._
 
   def find(absoluteFifth: FifthName, absoluteRoot: FifthName): Option[Tension] = {
-    val interval = absoluteFifth - absoluteRoot
-    ts.find(_.interval.fifth == interval)
+    val interval: FifthInterval = absoluteFifth - absoluteRoot
+    ts.find(_.interval == interval)
   }
 
   private val ts =

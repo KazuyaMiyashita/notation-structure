@@ -2,8 +2,11 @@ package core
 
 case class FifthName(value: Int) {
 
-  def +(that: FifthName) = FifthName(this.value + that.value)
-  def -(that: FifthName) = FifthName(this.value - that.value)
+  // def +(that: FifthName) = FifthName(this.value + that.value)
+  // def -(that: FifthName) = FifthName(this.value - that.value)
+  def +(that: FifthInterval): FifthName = FifthName(this.value + that.value)
+  def -(that: FifthInterval): FifthName = FifthName(this.value - that.value)
+  def -(that: FifthName): FifthInterval = FifthInterval(this.value - that.value)
 
   def name: String = value match {
     case -15 => "Fbb"

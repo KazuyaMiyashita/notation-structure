@@ -49,8 +49,8 @@ object ChordNaming {
       absRoot <- absFifths.toList
       chordPattern <- chordPatterns
     } yield {
-      val intervals: Set[FifthInterval] = absPitchs.map(p => FifthInterval(p.fifth - absRoot))
-      val bass = FifthInterval(absBass - absRoot)
+      val intervals: Set[FifthInterval] = absPitchs.map(p => p.fifth - absRoot)
+      val bass = absBass - absRoot
       val tensions: Set[Tension] = chordPattern.tensionNotes
         .filter(t => intervals(t.interval))
         .filter(t => t.interval != bass)
