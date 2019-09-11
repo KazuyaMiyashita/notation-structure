@@ -14,4 +14,13 @@ lazy val root = (project in file("."))
     libraryDependencies += scalaTest % Test
   )
 
+lazy val midi = (project in file("midi"))
+  .settings(
+    name := "notation-structure-midi",
+    libraryDependencies += scalaTest % Test,
+    fork in run := true,
+    connectInput in run := true
+  )
+  .dependsOn(root)
+
 // See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.
