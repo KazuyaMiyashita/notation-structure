@@ -1,6 +1,8 @@
 package core
 
-case class FifthInterval(value: Int) {
+case class FifthInterval(value: Int) extends Ordering[FifthInterval] {
+
+  def compare(x: FifthInterval, y: FifthInterval): Int = x.value compare y.value
   
   def +(that: FifthInterval) = FifthInterval(this.value + that.value)
   def -(that: FifthInterval) = FifthInterval(this.value - that.value)

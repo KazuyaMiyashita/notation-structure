@@ -32,11 +32,11 @@ class EnharmonicSpec extends WordSpec with Matchers {
       conbinations(60, 63) shouldEqual Set(
         Set(Bs3, Ds4),
         Set(Bs3, Eb4),
-        Set(Bs3, Fbb4), // ? 重減五度
+        // Set(Bs3, Fbb4), // ? 重減五度
         Set(C4, Ds4),
         Set(C4, Eb4),
-        Set(C4, Fbb4), // ? 重々減三度
-        Set(Dbb4, Ds4), // ? 重々増一度
+        // Set(C4, Fbb4), // ? 重々減三度
+        // Set(Dbb4, Ds4), // ? 重々増一度
         Set(Dbb4, Eb4),
         Set(Dbb4, Fbb4)
       )

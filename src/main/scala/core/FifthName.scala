@@ -1,9 +1,9 @@
 package core
 
-case class FifthName(value: Int) {
+case class FifthName(value: Int) extends Ordering[FifthName] {
 
-  // def +(that: FifthName) = FifthName(this.value + that.value)
-  // def -(that: FifthName) = FifthName(this.value - that.value)
+  def compare(x: FifthName, y: FifthName): Int = x.value compare y.value
+
   def +(that: FifthInterval): FifthName = FifthName(this.value + that.value)
   def -(that: FifthInterval): FifthName = FifthName(this.value - that.value)
   def -(that: FifthName): FifthInterval = FifthInterval(this.value - that.value)
