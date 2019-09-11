@@ -1,6 +1,6 @@
 package midi
 
-import core.MidiNoteNumber
+import core._
 import javax.sound.midi.{Receiver, MidiMessage}
 
 class MyMidiReceiver extends Receiver {
@@ -17,7 +17,20 @@ class MyMidiReceiver extends Receiver {
     val midiNoteNumber = MidiNoteNumber(mes(1))
     if (mes(0) == NoteOn) notes += midiNoteNumber
     else if (mes(0) == NoteOff) notes -= midiNoteNumber
-    println(notes.map(_.value).mkString(" "))
+
+    val chord = chorden(this.notes)
+    println(notes.map(_.value).mkString(" ") + " : " + chordToString(chord))
+  }
+
+  def chorden(midiNums: Set[MidiNoteNumber]): Either[Set[Chord], Chord] = {
+    val enharmonics = midiNums.map(n => Enharmonic(n)).toSet
+    val combinate = Enharmonic.combinate(enharmonics)
+    EnharmonicChordNaming.calculate(combinate)
+  }
+
+  def chordToString(chord: Either[Set[Chord], Chord]): String = chord match {
+    case Left(cs) => cs.mkString(" ")
+    case Right(c) => c.toString
   }
 
 }
