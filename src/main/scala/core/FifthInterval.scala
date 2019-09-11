@@ -1,8 +1,11 @@
 package core
 
-case class FifthInterval(fifth: FifthName) {
-  def +(that: FifthInterval) = FifthInterval(this.fifth + that.fifth)
-  def -(that: FifthInterval) = FifthInterval(this.fifth - that.fifth)
+case class FifthInterval(value: Int) extends Ordered[FifthInterval] {
+
+  def compare(that: FifthInterval): Int = this.value compare that.value
+  
+  def +(that: FifthInterval) = FifthInterval(this.value + that.value)
+  def -(that: FifthInterval) = FifthInterval(this.value - that.value)
 
   def name = {
     import FifthIntervalName._
@@ -32,9 +35,7 @@ case class FifthInterval(fifth: FifthName) {
       case MajSeventh => "M7"
       case AugSeventh => "A7"
       case DimOctave => "d8"
-      case PerOctave => "P8"
-      case AugOctave => "A8"
-      case _ => s"FifthInterval(${fifth})"
+      case _ => s"FifthInterval(${value})"
     }
   }
   override def toString = name
