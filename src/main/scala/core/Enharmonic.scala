@@ -28,9 +28,9 @@ object Enharmonic {
         case Nil => (Nil, acc)
         case enh :: ts => {
           val next = for {
-            ps <- enh.pitchs
-            ac <- acc
-          } yield (ps :: Nil) ::: ac
+            p <- enh.pitchs
+            ac <- acc if ac.forall(a => math.abs((p.fifth - a.fifth).value) <= 12) // DimSecond or AugSeventh
+          } yield (p :: Nil) ::: ac
           proc(ts, next)
         }
       }
