@@ -42,8 +42,8 @@ object ChordNaming {
     }
   }
   def calculateCandidates(absPitchs: Set[Pitch]): List[Candidate] = {
-    val absFifths: Set[FifthName] = absPitchs.map(_.fifth)
-    val absBass: FifthName = absPitchs.minBy(_.toMidiNoteNumber.value).fifth
+    val absFifths: Set[Fifth] = absPitchs.map(_.fifth)
+    val absBass: Fifth = absPitchs.minBy(_.toMidiNoteNumber.value).fifth
 
     for {
       absRoot <- absFifths.toList

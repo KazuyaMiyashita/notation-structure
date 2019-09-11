@@ -1,6 +1,6 @@
 package core
 
-case class Pitch(octave: Int, fifth: FifthName) {
+case class Pitch(octave: Int, fifth: Fifth) {
 
   def +(that: PitchInterval) = Pitch(this.octave + that.octave, this.fifth + that.fifth)
   def -(that: PitchInterval) = Pitch(this.octave - that.octave, this.fifth - that.fifth)
@@ -235,5 +235,5 @@ case class Pitch(octave: Int, fifth: FifthName) {
 }
 
 object Pitch {
-  def apply(octave: Int, fifthValue: Int) = new Pitch(octave, FifthName(fifthValue))
+  def apply(octave: Int, fifthValue: Int) = new Pitch(octave, Fifth(fifthValue))
 }

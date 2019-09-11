@@ -7,7 +7,7 @@ case class Enharmonic(midiNoteNumber: MidiNoteNumber) {
       fifth <- -15 to 19
       n = (midiNoteNumber.value - 60) - (7 * fifth) if n % 12 == 0
       oct = n / 12
-    } yield Pitch(oct, FifthName(fifth))
+    } yield Pitch(oct, Fifth(fifth))
     ps.toList
   }
   def pitchSet: Set[Pitch] = pitchs.toSet

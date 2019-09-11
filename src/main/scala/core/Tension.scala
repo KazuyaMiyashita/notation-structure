@@ -43,7 +43,7 @@ object Tension {
 object Tensions {
   import Tension._
 
-  def find(absoluteFifth: FifthName, absoluteRoot: FifthName): Option[Tension] = {
+  def find(absoluteFifth: Fifth, absoluteRoot: Fifth): Option[Tension] = {
     val interval: FifthInterval = absoluteFifth - absoluteRoot
     ts.find(_.interval == interval)
   }
