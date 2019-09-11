@@ -35,6 +35,4 @@ object FifthIntervalName {
   object AugSeventh extends FifthInterval(Bs.value)
 
   object DimOctave extends FifthInterval(Cb.value)
-  object PerOctave extends FifthInterval(C.value)
-  object AugOctave extends FifthInterval(Cs.value)
 }

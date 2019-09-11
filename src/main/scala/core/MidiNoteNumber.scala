@@ -1,7 +1,7 @@
 package core
 
-case class MidiNoteNumber(value: Int) extends Ordering[MidiNoteNumber] {
+case class MidiNoteNumber(value: Int) extends Ordered[MidiNoteNumber] {
 
-  def compare(x: MidiNoteNumber, y: MidiNoteNumber): Int = x.value compare y.value
+  def compare(that: MidiNoteNumber): Int = this.value compare that.value
 
 }

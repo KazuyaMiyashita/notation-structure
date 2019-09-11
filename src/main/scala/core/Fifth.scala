@@ -1,8 +1,8 @@
 package core
 
-case class Fifth(value: Int) extends Ordering[Fifth] {
+case class Fifth(value: Int) extends Ordered[Fifth] {
 
-  def compare(x: Fifth, y: Fifth): Int = x.value compare y.value
+  def compare(that: Fifth): Int = this.value compare that.value
 
   def +(that: FifthInterval): Fifth = Fifth(this.value + that.value)
   def -(that: FifthInterval): Fifth = Fifth(this.value - that.value)

@@ -11,31 +11,31 @@ object Tension {
 
   object FlatNinth extends Tension {
     override val name = "b9"
-    override val interval = MinSecond + PerOctave
+    override val interval = MinSecond
   }
   object Ninth extends Tension {
     override val name = "9"
-    override val interval = MajSecond + PerOctave
+    override val interval = MajSecond
   }
   object SharpNinth extends Tension {
     override val name = "#9"
-    override val interval = AugSecond + PerOctave
+    override val interval = AugSecond
   }
   object Eleventh extends Tension {
     override val name = "11"
-    override val interval = PerFourth + PerOctave
+    override val interval = PerFourth
   }
   object SharpEleventh extends Tension {
     override val name = "#11"
-    override val interval = AugFourth + PerOctave
+    override val interval = AugFourth
   }
   object FlatThirteenth extends Tension {
     override val name = "b13"
-    override val interval = MinSixth + PerOctave
+    override val interval = MinSixth
   }
   object Thirteenth extends Tension {
     override val name = "13"
-    override val interval = MajSixth + PerOctave
+    override val interval = MajSixth
   }
 
 }
