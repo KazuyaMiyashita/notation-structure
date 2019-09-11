@@ -26,7 +26,13 @@ object Enharmonic {
 
       remaining match {
         case Nil => (Nil, acc)
-        case enh :: ts => proc(ts, enh.pitchs.map(ps => acc.map(ac => (ps :: Nil) ::: ac)).flatten)
+        case enh :: ts => {
+          val next = for {
+            ps <- enh.pitchs
+            ac <- acc
+          } yield (ps :: Nil) ::: ac
+          proc(ts, next)
+        }
       }
     }
 
