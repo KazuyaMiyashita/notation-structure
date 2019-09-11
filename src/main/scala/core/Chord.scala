@@ -1,9 +1,9 @@
 package core
 
 case class Chord(
-  root: FifthName,
+  root: Fifth,
   chordType: ChordType,
-  bass: FifthName,
+  bass: Fifth,
   tensions: Set[Tension]
 ) {
 
@@ -17,13 +17,13 @@ case class Chord(
 
   override def toString = name
 
-  def withBass(b: FifthName): Chord = this.copy(bass = b)
+  def withBass(b: Fifth): Chord = this.copy(bass = b)
   def withTensions(ts: Tension*): Chord = this.copy(tensions = tensions ++ ts.toSet)
 }
 
 object Chord {
   
-  def apply(root: FifthName, chordType: ChordType) = {
+  def apply(root: Fifth, chordType: ChordType) = {
     new Chord(root, chordType, root, Set())
   }
 
