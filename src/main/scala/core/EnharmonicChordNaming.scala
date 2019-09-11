@@ -20,12 +20,12 @@ object EnharmonicChordNaming {
 
     val chordAvgs: List[(Chord, Double)] = chords.map { chord =>
       val fifths: Set[Fifth] = chord.chordType.pattern.chordTones.map(chord.root + _)
-      val avg: Double = fifths.map(_.value).sum.toDouble / fifths.size
+      val avg: Double = fifths.map(_.value - FifthName.D.value).sum.toDouble / fifths.size // Dを中心に
       (chord, avg)
     }
     
     val maxPriority = chordAvgs.minBy({ case (chord, avg) =>
-      math.abs(avg - 62)
+      math.abs(avg)
     })(Ordering.Double.TotalOrdering)._2
     val highPriorityChords = chordAvgs.filter(_._2 == maxPriority)
     
