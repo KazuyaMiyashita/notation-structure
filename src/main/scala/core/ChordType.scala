@@ -11,31 +11,31 @@ object ChordType {
 
   object Major extends ChordType {
     override val name = ""
-    override val pattern = ChordPattern(Major,Set(PerUnison, MajThird, PerFifth), Set(PerFourth, MinSeventh), Set(Ninth, SharpEleventh, Thirteenth))
+    override val pattern = ChordPattern(Major,Set(PerUnison, MajThird, PerFifth), Set(DimFourth, PerFourth, MinSeventh), Set(Ninth, SharpEleventh, Thirteenth))
   }
   object Minor extends ChordType {
     override val name = "m"
-    override val pattern = ChordPattern(Minor, Set(PerUnison, MinThird, PerFifth), Set(MinSecond, MinSeventh), Set(Ninth, Eleventh))
+    override val pattern = ChordPattern(Minor, Set(PerUnison, MinThird, PerFifth), Set(MinSecond, AugSecond, DimThird, DimSixth, MinSeventh), Set(Ninth, Eleventh))
   }
   object Seventh extends ChordType {
     override val name = "7"
-    override val pattern = ChordPattern(Seventh, Set(PerUnison, MajThird, PerFifth, MinSeventh), Set(PerFourth), Set(FlatNinth, Ninth, SharpNinth, SharpEleventh, FlatThirteenth, Thirteenth))
+    override val pattern = ChordPattern(Seventh, Set(PerUnison, MajThird, PerFifth, MinSeventh), Set(AugUnison, DimSecond, MinThird, DimFourth, PerFourth, DimFifth, AugFifth, AugSixth), Set(FlatNinth, Ninth, SharpNinth, SharpEleventh, FlatThirteenth, Thirteenth))
   }
   object MinorSeventh extends ChordType {
     override val name = "m7"
-    override val pattern = ChordPattern(MinorSeventh, Set(PerUnison, MinThird, PerFifth, MinSeventh), Set(), Set(FlatNinth, Ninth, Eleventh, FlatThirteenth, Thirteenth))
+    override val pattern = ChordPattern(MinorSeventh, Set(PerUnison, MinThird, PerFifth, MinSeventh), Set(AugSecond, DimThird, DimSixth), Set(FlatNinth, Ninth, Eleventh, FlatThirteenth, Thirteenth))
   }
   object MajorSeventh extends ChordType {
     override val name = "M7"
-    override val pattern = ChordPattern(MajorSeventh, Set(PerUnison, MajThird, PerFifth, MajSeventh), Set(PerFourth), Set(Ninth, SharpEleventh, Thirteenth))
+    override val pattern = ChordPattern(MajorSeventh, Set(PerUnison, MajThird, PerFifth, MajSeventh), Set(PerFourth, DimFifth, DimOctave), Set(Ninth, SharpEleventh, Thirteenth))
   }
   object Diminished extends ChordType {
     override val name = "dim"
-    override val pattern = ChordPattern(Diminished, Set(PerUnison, MinThird, DimFifth), Set(DimSeventh, MinSeventh, DimOctave), Set())
+    override val pattern = ChordPattern(Diminished, Set(PerUnison, MinThird, DimFifth), Set(DimSeventh, MinSeventh, MajSeventh, DimOctave), Set())
   }
   object DiminishedSeventh extends ChordType {
     override val name = "dim7"
-    override val pattern = ChordPattern(DiminishedSeventh, Set(PerUnison, MinThird, DimFifth, DimSeventh), Set(MinSeventh), Set())
+    override val pattern = ChordPattern(DiminishedSeventh, Set(PerUnison, MinThird, DimFifth, DimSeventh), Set(MinSeventh, MajSeventh), Set())
   }
   object HalfDiminishedSeventh extends ChordType {
     override val name = "m7-5"
@@ -47,7 +47,7 @@ object ChordType {
   }
   object SuspendedSeventh extends ChordType {
     override val name = "7sus4"
-    override val pattern = ChordPattern(SuspendedSeventh, Set(PerUnison, PerFourth, PerFifth, MinSeventh), Set(MinSecond, MajSecond, MinThird, MajThird, DimSeventh), Set())
+    override val pattern = ChordPattern(SuspendedSeventh, Set(PerUnison, PerFourth, PerFifth, MinSeventh), Set(MinSecond, MajSecond, DimThird, MinThird, MajThird, DimSeventh), Set())
   }
 
   val ChordTypes: List[ChordType] = {

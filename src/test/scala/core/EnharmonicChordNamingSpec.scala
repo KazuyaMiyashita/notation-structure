@@ -274,7 +274,10 @@ class EnharmonicChordNamingSpec extends WordSpec with Matchers {
     }
 
     "(A3, Ab4, C5, Eb5) to Ab / A" in {
-      nameof(A3, Ab4, C5, Eb5) shouldEqual Right(Chord(Ab, Major).withBass(A))
+      nameof(A3, Ab4, C5, Eb5) shouldEqual Left(Set(
+        Chord(Ab, Major).withBass(A),
+        Chord(Ab, Major).withBass(Bbb)
+      )) // これはどちらとも言えない
     }
 
   }
@@ -293,11 +296,11 @@ class EnharmonicChordNamingSpec extends WordSpec with Matchers {
 
   "diminished seventh chords" should {
 
-    "(C4, Eb4, Gb4, Bbb4) to C7dim" in {
-      nameof(C4, Eb4, Gb4, Bbb4) shouldEqual Right(Chord(C, DiminishedSeventh))
+    "(C4, Eb4, Gb4, Bbb4) to B#dim7" in {
+      nameof(C4, Eb4, Gb4, Bbb4) shouldEqual Right(Chord(Bs, DiminishedSeventh)) // Cdim7よりB#dim7の方が中央に近い
     }
 
-    "(D4, F4, Ab4, Cb5) to Ddim" in {
+    "(D4, F4, Ab4, Cb5) to Ddim7" in {
       nameof(D4, F4, Ab4, Cb5) shouldEqual Right(Chord(D, DiminishedSeventh))
     }
 

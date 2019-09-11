@@ -288,11 +288,11 @@ class ChordNamingSpec extends WordSpec with Matchers {
 
   "diminished seventh chords" should {
 
-    "(C4, Eb4, Gb4, Bbb4) to C7dim" in {
+    "(C4, Eb4, Gb4, Bbb4) to Cdim7" in {
       nameof(C4, Eb4, Gb4, Bbb4) shouldEqual Right(Chord(C, DiminishedSeventh))
     }
 
-    "(D4, F4, Ab4, Cb5) to Ddim" in {
+    "(D4, F4, Ab4, Cb5) to Ddim7" in {
       nameof(D4, F4, Ab4, Cb5) shouldEqual Right(Chord(D, DiminishedSeventh))
     }
 

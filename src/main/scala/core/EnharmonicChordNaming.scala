@@ -6,8 +6,6 @@ object EnharmonicChordNaming {
 
   def calculate(pitchss: Set[Set[Pitch]]): Either[Set[Chord], Chord]  = {
 
-    println()
-
     val allCandidates = for {
       pitchs <- pitchss.toList
       candidates <- ChordNaming.calculateCandidates(pitchs)
@@ -15,13 +13,6 @@ object EnharmonicChordNaming {
 
     val maxPriority = allCandidates.map(_._2).maxBy(_.scoreing.priority).scoreing.priority
     val highPriorityCandidates = allCandidates.filter(_._2.scoreing.priority == maxPriority)
-
-    highPriorityCandidates.foreach { c =>
-      print(c._1)
-      print(" : ")
-      print(c._2.scoreing.priority.toString + " : ")
-      println(c._2)
-    }
 
     highPriorityCandidates match {
       case Nil => Left(Set())
@@ -39,8 +30,6 @@ object EnharmonicChordNaming {
       val avg: Double = fifths.map(_.value - FifthName.D.value).sum.toDouble / fifths.size // Dを中心に
       (chord, avg)
     }
-
-    chordAvgs.foreach(println)
     
     val maxPriority = chordAvgs.minBy({ case (chord, avg) =>
       math.abs(avg)
