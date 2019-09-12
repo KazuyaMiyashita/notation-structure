@@ -24,7 +24,7 @@ object ChordNaming {
 
     for {
       absRoot <- absFifths.toList
-      chordPattern <- ChordType.ChordTypes.map(_.pattern)
+      chordPattern <- ChordType.all.map(ChordPattern.of(_))
       intervals: Set[FifthInterval] = absPitchs.map(p => p.fifth - absRoot)
       commonChordTones: Set[FifthInterval] = chordPattern.chordTones & intervals if commonChordTones.size >= 3
     } yield {
