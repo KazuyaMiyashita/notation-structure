@@ -61,12 +61,10 @@ object ChordNaming {
 
   def calculate(pitchs: Set[Pitch]): Either[Set[Chord], Chord] = {
 
-    if (pitchs.size == 0) Left(Set())
-    else {
-      val candidates = calculateCandidates(pitchs)
-      val maxPriority = candidates.maxBy(_.scoreing.priority).scoreing.priority
-      val highPriorityCandidates = candidates.filter(_.scoreing.priority == maxPriority)
+    def checkSize[A <: Iterable[_]](elems: A): Either[Set[Chord], A] =
+      if (elems.size == 0) Left(Set()) else Right(elems)
 
+    def filterResult(highPriorityCandidates: List[Candidate]): Either[Set[Chord], Chord] = {
       highPriorityCandidates match {
         case Nil => Left(Set())
         case c :: Nil => Right(c.chord)
@@ -74,6 +72,15 @@ object ChordNaming {
         case _ => Left(Set())
       }
     }
+
+    for {
+      nonEmptyPitchs <- checkSize(pitchs)
+      candidates = calculateCandidates(nonEmptyPitchs)
+      nonEmptyCandidates <- checkSize(candidates)
+      maxPriority = nonEmptyCandidates.maxBy(_.scoreing.priority).scoreing.priority
+      highPriorityCandidates = candidates.filter(_.scoreing.priority == maxPriority)
+      result <- filterResult(highPriorityCandidates)
+    } yield result
 
   }
 

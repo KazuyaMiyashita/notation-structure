@@ -4,20 +4,23 @@ object EnharmonicChordNaming {
 
   val MaxSuitables = 3
 
-  def calculate(pitchss: Set[Set[Pitch]]): Either[Set[Chord], Chord]  = {
+  def calculate(pitchss: Set[Set[Pitch]]): Either[Set[Chord], Chord] = {
 
     val allCandidates = for {
       pitchs <- pitchss.toList
       candidates <- ChordNaming.calculateCandidates(pitchs)
     } yield (pitchs, candidates)
 
-    val maxPriority = allCandidates.map(_._2).maxBy(_.scoreing.priority).scoreing.priority
-    val highPriorityCandidates = allCandidates.filter(_._2.scoreing.priority == maxPriority)
-
-    highPriorityCandidates match {
-      case Nil => Left(Set())
-      case c :: Nil => Right(c._2.chord)
-      case _ => mostSuitable(highPriorityCandidates.map(_._2.chord).toSet)
+    if (allCandidates.length == 0) Left(Set())
+    else {
+      val maxPriority = allCandidates.map(_._2).maxBy(_.scoreing.priority).scoreing.priority
+      val highPriorityCandidates = allCandidates.filter(_._2.scoreing.priority == maxPriority)
+  
+      highPriorityCandidates match {
+        case Nil => Left(Set())
+        case c :: Nil => Right(c._2.chord)
+        case _ => mostSuitable(highPriorityCandidates.map(_._2.chord).toSet)
+      }
     }
 
   }
