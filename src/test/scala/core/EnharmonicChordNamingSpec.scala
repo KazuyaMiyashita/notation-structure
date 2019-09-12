@@ -342,4 +342,52 @@ class EnharmonicChordNamingSpec extends WordSpec with Matchers {
 
   }
 
+  "seventh flat five chords" should {
+
+    "(C4, E4, Gb4, Bb4) to C7-5" in {
+      nameof(C4, E4, Gb4, Bb4) shouldEqual Right(Chord(C, SeventhFlatFive))
+    }
+
+    "(D4, Fs4, Ab4, C4) to D7-5" in {
+      nameof(D4, Fs4, Ab4, C5) shouldEqual Right(Chord(D, SeventhFlatFive))
+    }
+
+  }
+
+  "augumented chords" should {
+
+    "(C4, E4, Gs4) to Caug" in {
+      nameof(C4, E4, Gs4) shouldEqual Right(Chord(C, Augmented))
+    }
+
+    "(D4, Fs4, As4) to Caug" in {
+      nameof(D4, Fs4, As4) shouldEqual Right(Chord(D, Augmented))
+    }
+
+  }
+
+  "augumented major seventh chords" should {
+
+    "(C4, E4, Gs4 B4) to CaugM7" in {
+      nameof(C4, E4, Gs4, B4) shouldEqual Right(Chord(C, AugumentedMajorSeventh))
+    }
+
+    "(D4, Fs4, As4 Cs5) to CaugM7" in {
+      nameof(D4, Fs4, As4, Cs5) shouldEqual Right(Chord(D, AugumentedMajorSeventh))
+    }
+
+  }
+
+  "minor major seventh chords" should {
+
+    "(C4, Eb4, G4, B4) to CmM7" in {
+      nameof(C4, Eb4, G4, B4) shouldEqual Right(Chord(C, MinorMajorSeventh))
+    }
+
+    "(D4, F4, A4, Cs5) to DmM7" in {
+      nameof(D4, F4, A4, Cs5) shouldEqual Right(Chord(D, MinorMajorSeventh))
+    }
+
+  }
+
 }

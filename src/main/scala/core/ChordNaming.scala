@@ -25,14 +25,14 @@ object ChordNaming {
     for {
       absRoot <- absFifths.toList
       chordPattern <- ChordType.ChordTypes.map(_.pattern)
+      intervals: Set[FifthInterval] = absPitchs.map(p => p.fifth - absRoot)
+      commonChordTones: Set[FifthInterval] = chordPattern.chordTones & intervals if commonChordTones.size >= 3
     } yield {
-      val intervals: Set[FifthInterval] = absPitchs.map(p => p.fifth - absRoot)
       val bass = absBass - absRoot
       val tensions: Set[Tension] = chordPattern.tensionNotes
         .filter(t => intervals(t.interval))
         .filter(t => t.interval != bass)
-
-      val commonChordTones: Set[FifthInterval] = chordPattern.chordTones & intervals
+      
       val commonAvoidNones: Set[FifthInterval] = chordPattern.avoidNotes & intervals
 
       val diff1: Set[FifthInterval] = chordPattern.chordTones &~ intervals
