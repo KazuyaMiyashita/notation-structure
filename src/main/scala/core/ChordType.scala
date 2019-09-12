@@ -15,7 +15,7 @@ object ChordType {
   }
   object Minor extends ChordType {
     override val name = "m"
-    override val pattern = ChordPattern(Minor, Set(PerUnison, MinThird, PerFifth), Set(MinSecond, AugSecond, DimThird, DimSixth, MinSeventh), Set(Ninth, Eleventh))
+    override val pattern = ChordPattern(Minor, Set(PerUnison, MinThird, PerFifth), Set(MinSecond, AugSecond, DimThird, DimSixth, MinSeventh, MajSeventh), Set(Ninth, Eleventh))
   }
   object Seventh extends ChordType {
     override val name = "7"
@@ -47,8 +47,25 @@ object ChordType {
   }
   object SuspendedSeventh extends ChordType {
     override val name = "7sus4"
-    override val pattern = ChordPattern(SuspendedSeventh, Set(PerUnison, PerFourth, PerFifth, MinSeventh), Set(MinSecond, MajSecond, DimThird, MinThird, MajThird, DimSeventh), Set())
+    override val pattern = ChordPattern(SuspendedSeventh, Set(PerUnison, PerFourth, PerFifth, MinSeventh), Set(MinSecond, MajSecond, DimThird, MinThird, MajThird, DimFifth, DimSeventh), Set())
   }
+  object SeventhFlatFive extends ChordType {
+    override val name = "7-5"
+    override val pattern = ChordPattern(SeventhFlatFive, Set(PerUnison, MajThird, DimFifth, MinSeventh), Set(MinThird, PerFifth, DimSeventh, MajSeventh), Set())
+  }
+  object Augmented extends ChordType {
+    override val name = "aug"
+    override val pattern = ChordPattern(Augmented, Set(PerUnison, MajThird, AugFifth), Set(PerFifth, MinSeventh, MajSeventh), Set())
+  }
+  object AugumentedMajorSeventh extends ChordType {
+    override val name = "augM7"
+    override val pattern = ChordPattern(AugumentedMajorSeventh, Set(PerUnison, MajThird, AugFifth, MajSeventh), Set(PerFifth, MinSeventh), Set())
+  }
+  object MinorMajorSeventh extends ChordType {
+    override val name = "mM7"
+    override val pattern = ChordPattern(MinorMajorSeventh, Set(PerUnison, MinThird, PerFifth, MajSeventh), Set(MinSeventh), Set(Ninth))
+  }
+
 
   val ChordTypes: List[ChordType] = {
     Major ::
@@ -60,6 +77,10 @@ object ChordType {
     DiminishedSeventh ::
     HalfDiminishedSeventh ::
     Suspended ::
-    SuspendedSeventh :: Nil
+    SuspendedSeventh ::
+    SeventhFlatFive ::
+    Augmented ::
+    AugumentedMajorSeventh ::
+    MinorMajorSeventh :: Nil
   }
 }
