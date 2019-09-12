@@ -64,14 +64,17 @@ object ChordNaming {
     if (pitchs.size == 0) Left(Set())
     else {
       val candidates = calculateCandidates(pitchs)
-      val maxPriority = candidates.maxBy(_.scoreing.priority).scoreing.priority
-      val highPriorityCandidates = candidates.filter(_.scoreing.priority == maxPriority)
-
-      highPriorityCandidates match {
-        case Nil => Left(Set())
-        case c :: Nil => Right(c.chord)
-        case cs if highPriorityCandidates.length <= MaxCandicates => Left(cs.map(_.chord).toSet)
-        case _ => Left(Set())
+      if (candidates.length == 0) Left(Set())
+      else {
+        val maxPriority = candidates.maxBy(_.scoreing.priority).scoreing.priority
+        val highPriorityCandidates = candidates.filter(_.scoreing.priority == maxPriority)
+  
+        highPriorityCandidates match {
+          case Nil => Left(Set())
+          case c :: Nil => Right(c.chord)
+          case cs if highPriorityCandidates.length <= MaxCandicates => Left(cs.map(_.chord).toSet)
+          case _ => Left(Set())
+        }
       }
     }
 
