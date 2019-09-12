@@ -29,7 +29,7 @@ object EnharmonicChordNaming {
     val chords = chordSet.toList
 
     val chordAvgs: List[(Chord, Double)] = chords.map { chord =>
-      val fifths: Set[Fifth] = chord.chordType.pattern.chordTones.map(chord.root + _)
+      val fifths: Set[Fifth] = ChordPattern.of(chord.chordType).chordTones.map(chord.root + _)
       val avg: Double = fifths.map(_.value - FifthName.D.value).sum.toDouble / fifths.size // Dを中心に
       (chord, avg)
     }
