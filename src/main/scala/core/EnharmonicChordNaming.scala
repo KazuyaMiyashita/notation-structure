@@ -4,7 +4,7 @@ object EnharmonicChordNaming {
 
   val MaxSuitables = 3
 
-  def calculate(pitchss: Set[Set[Pitch]]): Either[Set[Chord], Chord]  = {
+  def calculate(pitchss: Set[Set[Pitch]]): Either[Set[Chord], Chord] = {
 
     val allCandidates = for {
       pitchs <- pitchss.toList
